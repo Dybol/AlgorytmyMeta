@@ -1,6 +1,7 @@
 package tsp.euc2d;
 
 import tsp.FileImporter;
+import tsp.InstanceGenerator;
 import tsp.euc2d.model.Euc2d;
 
 import java.io.File;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Euc2dImporter implements FileImporter {
+public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
 
 	private final List<Euc2d> coordinatesList = new ArrayList<>();
 
