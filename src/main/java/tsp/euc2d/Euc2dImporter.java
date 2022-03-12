@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Euc2dImporter implements FileImporter {
@@ -30,5 +31,15 @@ public class Euc2dImporter implements FileImporter {
 			} catch (Exception ignored) {
 			}
 		}
+	}
+
+	public List<Euc2d> generateRandomInstances(int numberOfInstances, int maxValue) {
+		List<Euc2d> instanceList = new ArrayList<>();
+		Random random = new Random();
+
+		for(int i = 0 ; i < numberOfInstances; i ++)
+			instanceList.add(new Euc2d(random.nextInt(maxValue), random.nextInt(maxValue)));
+
+		return instanceList;
 	}
 }
