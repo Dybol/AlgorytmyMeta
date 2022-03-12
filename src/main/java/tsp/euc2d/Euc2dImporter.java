@@ -1,0 +1,34 @@
+package tsp.euc2d;
+
+import tsp.FileImporter;
+import tsp.euc2d.model.Euc2d;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Euc2dImporter implements FileImporter {
+
+	private final List<Euc2d> coordinatesList = new ArrayList<>();
+
+	@Override
+	public void importFile(String pathToFile) throws FileNotFoundException {
+		File file = new File(pathToFile);
+
+		if(!file.exists())
+			throw new FileNotFoundException();
+
+		Scanner scanner = new Scanner(file);
+
+		while(scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			String[] splitLine = line.split(" ");
+			try {
+				coordinatesList.add(new Euc2d(Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2])));
+			} catch (Exception ignored) {
+			}
+		}
+	}
+}
