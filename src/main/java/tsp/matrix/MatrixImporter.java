@@ -14,7 +14,7 @@ public class MatrixImporter implements FileImporter {
 	private Integer[][] cordTab;
 
 	@Override
-	public void importFile(String pathToFile) throws FileNotFoundException {
+	public void importGraph(String pathToFile) throws FileNotFoundException {
 		File file = new File(pathToFile);
 
 		List<String> allLines = new ArrayList<>();
@@ -58,6 +58,11 @@ public class MatrixImporter implements FileImporter {
 		System.out.println("Zaimportowano z sukcesem!");
 		printMatrix(cordTab, dimension);
 		System.out.println("---------------------------");
+	}
+
+	@Override
+	public void importOptimalTour(String pathToFile) throws FileNotFoundException {
+		//TODO
 	}
 
 	public void printMatrix(Integer[][] table, int dimension) {

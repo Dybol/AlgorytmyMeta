@@ -13,10 +13,10 @@ public class LoadData {
 		euc2dImporter.importGraph("fl417.tsp");
 
 		ATSPMatrixImporter ATSPMatrixImporter = new ATSPMatrixImporter();
-		ATSPMatrixImporter.importFile("ft53.atsp");
+		ATSPMatrixImporter.importGraph("ft53.atsp");
 
 		TSPMatrixImporter tspMatrixImporter = new TSPMatrixImporter();
-		ATSPMatrixImporter.importFile("swiss42.tsp");
+		ATSPMatrixImporter.importGraph("swiss42.tsp");
 
 		euc2dImporter.importGraph("pr76.tsp");
 		euc2dImporter.importOptimalTour("pr76.opt.tour");
@@ -30,6 +30,8 @@ public class LoadData {
 			path[i] = i+1;
 		}
 		System.out.printf("%f %%\n", graph.PRD(path));
+
+		System.out.println("-------------------------Generowanie losowych instancji--------------------------");
 
 		System.out.println(euc2dImporter.generateRandomInstances(100, 100));
 		ATSPMatrixImporter.printMatrix(ATSPMatrixImporter.generateRandomInstances(10, 100), 10);

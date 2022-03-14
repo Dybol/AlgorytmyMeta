@@ -40,7 +40,6 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<List<Euc2d
 
 	public Euc2dGraph getGraph() {
 		return graph;
-		System.out.println(coordinatesList);
 	}
 
 	public List<Euc2d> generateRandomInstances(int numberOfInstances, int maxValue) {
