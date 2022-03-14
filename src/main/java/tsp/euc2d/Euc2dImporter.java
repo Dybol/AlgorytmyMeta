@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
+public class Euc2dImporter implements FileImporter, InstanceGenerator<List<Euc2d>> {
 
 	private final List<Euc2d> coordinatesList = new ArrayList<>();
 
@@ -30,8 +30,12 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
 			try {
 				coordinatesList.add(new Euc2d(Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2])));
 			} catch (Exception ignored) {
+				try {
+					coordinatesList.add(new Euc2d((int) Double.parseDouble(splitLine[1]), (int) Double.parseDouble(splitLine[2])));
+				} catch (Exception ignored1) {}
 			}
 		}
+		System.out.println(coordinatesList);
 	}
 
 	public List<Euc2d> generateRandomInstances(int numberOfInstances, int maxValue) {
