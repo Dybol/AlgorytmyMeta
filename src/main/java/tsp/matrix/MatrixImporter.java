@@ -61,7 +61,7 @@ public class MatrixImporter implements FileImporter {
 	}
 
 	@Override
-	public void importOptimalTour(String pathToFile) throws FileNotFoundException {
+	public void importOptimalTour(String pathToFile) {
 		//TODO
 	}
 
