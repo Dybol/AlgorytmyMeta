@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
+public class Euc2dImporter implements FileImporter, InstanceGenerator<List<Euc2d>> {
 
 	private Euc2dGraph graph;
 
@@ -25,19 +25,20 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
 
 		Scanner scanner = new Scanner(file);
 
-		ArrayList<Euc2d> coordinatesList = new ArrayList<Euc2d>();
+		ArrayList<Euc2d> coordinatesList = new ArrayList<>();
+
 		while(scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] splitLine = line.split(" ");
 			try {
 				coordinatesList.add(new Euc2d(Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2])));
-			} catch (Exception ignored) {
-			}
+			} catch (Exception ignored) {}
 		}
+
 		scanner.close();
 		graph = new Euc2dGraph(coordinatesList);
 	}
-	
+
 	public Euc2dGraph getGraph() {
 		return graph;
 	}
@@ -61,22 +62,22 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<Euc2d> {
 
 		Scanner scanner = new Scanner(file);
 
-		int[] optimal_path = new int[graph.getNodesCount()];
+		int[] optimalPath = new int[graph.getNodesCount()];
 		int counter = 0;
-		
+
 		while(scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			String[] splitLine = line.split(" ");
 			try {
-				int vertice_no = Integer.parseInt(splitLine[0]);
-				if(vertice_no == -1) break;
-				optimal_path[counter] = vertice_no;
+				int verticeNo = Integer.parseInt(splitLine[0]);
+				if(verticeNo == -1) break;
+				optimalPath[counter] = verticeNo;
 				counter++;
 			} catch (Exception ignored) {
 			}
 		}
 		scanner.close();
-		
-		graph.setOptimalPath(optimal_path);
+
+		graph.setOptimalPath(optimalPath);
 	}
 }

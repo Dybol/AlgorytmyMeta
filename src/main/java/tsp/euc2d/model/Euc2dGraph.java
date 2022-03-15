@@ -7,7 +7,7 @@ import tsp.Graph;
 public class Euc2dGraph implements Graph{
 
 	private ArrayList<Euc2d> nodes;
-	private int[] optimal_path = null;
+	private int[] optimalPath = null;
 	
 	public Euc2dGraph(ArrayList<Euc2d> nodes) {
 		this.nodes = nodes;
@@ -15,16 +15,15 @@ public class Euc2dGraph implements Graph{
 	
 	public void setOptimalPath(int[] node_numbers) {
 		if(isPathCorrect(node_numbers))
-			this.optimal_path = node_numbers;
+			this.optimalPath = node_numbers;
 		else
 			System.out.println("Incorrect path!");
 	}
 	
 	@Override
 	public double calculateDistance(int from, int to) {
-		double distance = Math.sqrt(Math.pow((nodes.get(from-1).getCordX()-nodes.get(to-1).getCordX()), 2) 
+		return Math.sqrt(Math.pow((nodes.get(from-1).getCordX()-nodes.get(to-1).getCordX()), 2)
 				+ Math.pow((nodes.get(from-1).getCordY()-nodes.get(to-1).getCordY()), 2));
-		return distance;
 	}
 	
 	@Override
@@ -48,7 +47,7 @@ public class Euc2dGraph implements Graph{
 			return false;
 		}
 		else {
-			ArrayList<Integer> visited_points = new ArrayList<Integer>();
+			ArrayList<Integer> visited_points = new ArrayList<>();
 			for(int i = 0; i<node_numbers.length; i++) {
 				if(visited_points.contains(node_numbers[i])) {
 					return false;
@@ -69,8 +68,8 @@ public class Euc2dGraph implements Graph{
 	public double PRD(int[] path) {
 		double prd = -1.0;
 		if(isPathCorrect(path)) {
-			if(optimal_path != null) {
-				double optimal_length = pathLength(optimal_path);
+			if(optimalPath != null) {
+				double optimal_length = pathLength(optimalPath);
 				//nie jestem pewny tego wzoru!
 				prd = ((pathLength(path) - optimal_length)/optimal_length) * 100.0;
 			}
@@ -87,9 +86,9 @@ public class Euc2dGraph implements Graph{
 	public void printMatrix() {
 		for(int i = 0; i < nodes.size(); i++) {
 			for(int j = 0; j < nodes.size(); j++) {
-				System.out.printf("%d ", calculateDistance(i,j));
+				System.out.printf("%f ", calculateDistance(i,j));
 			}
-			System.out.printf("\n");
+			System.out.print("\n");
 		}
 	}
 	
