@@ -30,12 +30,12 @@ public class LoadData {
 		System.out.println(matrixGraph.calculateDistance(2, 4));
 
 		//przykładowa ścieżka 1->2->...->76->1
-		int[] path = new int[graph.getNodesCount()];
+		Integer[] path = new Integer[graph.getNodesCount()];
 		for(int i = 0; i < path.length; i++) {
 			path[i] = i+1;
 		}
 		
-		int[] path2 = new int[matrixGraph.getNodesCount()];
+		Integer[] path2 = new Integer[matrixGraph.getNodesCount()];
 		for(int i = 0; i < path2.length; i++) {
 			path2[i] = i+1;
 		}

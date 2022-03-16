@@ -47,7 +47,6 @@ public class MatrixImporter implements FileImporter {
 
 		int xCounter = 0;
 		int yCounter = 0;
-		System.out.println(allCoordinates.size());
 		for(Integer cord: allCoordinates) {
 			cordTab[yCounter][xCounter] = cord;
 			xCounter++;
@@ -77,7 +76,7 @@ public class MatrixImporter implements FileImporter {
 
 			Scanner scanner = new Scanner(file);
 
-			int[] optimalPath = new int[graph.getNodesCount()];
+			Integer[] optimalPath = new Integer[graph.getNodesCount()];
 			int counter = 0;
 
 			while(scanner.hasNextLine()) {

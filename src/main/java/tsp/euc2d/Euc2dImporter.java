@@ -66,7 +66,7 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<List<Euc2d
 
 			Scanner scanner = new Scanner(file);
 
-			int[] optimalPath = new int[graph.getNodesCount()];
+			Integer[] optimalPath = new Integer[graph.getNodesCount()];
 			int counter = 0;
 
 			while(scanner.hasNextLine()) {

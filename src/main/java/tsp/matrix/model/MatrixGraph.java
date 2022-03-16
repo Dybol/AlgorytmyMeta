@@ -11,22 +11,26 @@ public class MatrixGraph implements Graph{
 	
 	//konwencja: edges[from-1][to-1] jako krawędź od punktu <from> do punktu <to> 
 	private Integer [][] edges;
-	private int[] optimalPath = null;
-	private int[] currentPath = null;
+	private Integer[] optimalPath = null;
+	private Integer[] currentPath = null;
 	
 	public MatrixGraph(Integer[][] cordTab) {
 		this.edges = cordTab;
 		this.size = cordTab.length;
 	}
 	
-	public void setOptimalPath(int[] node_numbers) {
+	public Integer[] getCurrentPath() {
+		return currentPath;
+	}
+	
+	public void setOptimalPath(Integer[] node_numbers) {
 		if(isPathCorrect(node_numbers))
 			this.optimalPath = node_numbers;
 		else
 			System.out.println("Incorrect path!");
 	}
 	
-	public void setCurrentPath(int[] node_numbers) {
+	public void setCurrentPath(Integer[] node_numbers) {
 		if(isPathCorrect(node_numbers))
 			this.currentPath = node_numbers;
 		else
@@ -39,7 +43,7 @@ public class MatrixGraph implements Graph{
 	}
 	
 	@Override
-	public double pathLength(int[] node_numbers) {
+	public double pathLength(Integer[] node_numbers) {
 		double sum = 0.0;
 		if(isPathCorrect(node_numbers)) {
 			for (int i = 0; i < (size - 1); i++) {
@@ -54,7 +58,7 @@ public class MatrixGraph implements Graph{
 	}
 
 	@Override
-	public boolean isPathCorrect(int[] node_numbers) {
+	public boolean isPathCorrect(Integer[] node_numbers) {
 		if(node_numbers.length != size) {
 			return false;
 		}
@@ -77,7 +81,7 @@ public class MatrixGraph implements Graph{
 	}
 
 	@Override
-	public double PRD(int[] path) {
+	public double PRD(Integer[] path) {
 		double prd = -1.0;
 		if(isPathCorrect(path)) {
 			if(optimalPath != null) {
