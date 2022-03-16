@@ -7,21 +7,26 @@ import tsp.Graph;
 public class Euc2dGraph implements Graph{
 
 	private ArrayList<Euc2d> nodes;
-	private int[] optimalPath = null;
-	private int[] currentPath = null;
+	private Integer[] optimalPath = null;
+	private Integer[] currentPath = null;
 	
 	public Euc2dGraph(ArrayList<Euc2d> nodes) {
 		this.nodes = nodes;
 	}
 	
-	public void setOptimalPath(int[] node_numbers) {
+	public Integer[] getCurrentPath() {
+		return currentPath;
+	}
+	
+	public void setOptimalPath(Integer[] node_numbers) {
 		if(isPathCorrect(node_numbers))
 			this.optimalPath = node_numbers;
 		else
 			System.out.println("Incorrect path!");
 	}
 	
-	public void setCurrentPath(int[] node_numbers) {
+	@Override
+	public void setCurrentPath(Integer[] node_numbers) {
 		if(isPathCorrect(node_numbers))
 			this.currentPath = node_numbers;
 		else
@@ -35,7 +40,7 @@ public class Euc2dGraph implements Graph{
 	}
 	
 	@Override
-	public double pathLength(int[] node_numbers) {
+	public double pathLength(Integer[] node_numbers) {
 		double sum = 0.0;
 		if(isPathCorrect(node_numbers)) {
 			for (int i = 0; i < (nodes.size() - 1); i++) {
@@ -50,7 +55,7 @@ public class Euc2dGraph implements Graph{
 	}
 
 	@Override
-	public boolean isPathCorrect(int[] node_numbers) {
+	public boolean isPathCorrect(Integer[] node_numbers) {
 		if(node_numbers.length != nodes.size()) {
 			return false;
 		}
@@ -73,7 +78,7 @@ public class Euc2dGraph implements Graph{
 	}
 
 	@Override
-	public double PRD(int[] path) {
+	public double PRD(Integer[] path) {
 		double prd = -1.0;
 		if(isPathCorrect(path)) {
 			if(optimalPath != null) {
