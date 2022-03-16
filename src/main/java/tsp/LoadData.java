@@ -1,5 +1,6 @@
 package tsp;
 
+import tsp.algorithms.Algorithm2Opt;
 import tsp.euc2d.Euc2dImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
@@ -48,5 +49,15 @@ public class LoadData {
 		ATSPMatrixImporter.printMatrix(ATSPMatrixImporter.generateRandomInstances(10, 100), 10);
 		System.out.println("---------------------------------------------------------------");
 		tspMatrixImporter.printMatrix(tspMatrixImporter.generateRandomInstances(10, 100), 10);
+		
+		Integer[] tab = new Integer[76];
+		for(int i = 0; i <= 75; i++) {
+			tab[i] = i+1;
+		}
+		graph.setCurrentPath(tab);
+		Algorithm2Opt alg = new Algorithm2Opt(graph);
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		System.out.println(graph.pathLength(alg.findSolution()));
+		
 	}
 }
