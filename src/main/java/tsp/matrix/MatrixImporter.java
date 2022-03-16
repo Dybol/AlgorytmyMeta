@@ -1,6 +1,7 @@
 package tsp.matrix;
 
 import tsp.FileImporter;
+import tsp.matrix.model.MatrixGraph;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 
 public class MatrixImporter implements FileImporter {
 
+	private MatrixGraph graph;
 	private Integer[][] cordTab;
 
 	@Override
@@ -45,15 +47,17 @@ public class MatrixImporter implements FileImporter {
 
 		int xCounter = 0;
 		int yCounter = 0;
-
+		System.out.println(allCoordinates.size());
 		for(Integer cord: allCoordinates) {
 			cordTab[yCounter][xCounter] = cord;
 			xCounter++;
 			if(xCounter == dimension) {
 				xCounter = 0;
 				yCounter++;
+				if(yCounter == dimension) break;
 			}
 		}
+		graph = new MatrixGraph(cordTab);
 
 		System.out.println("Zaimportowano z sukcesem!");
 		printMatrix(cordTab, dimension);
@@ -61,8 +65,52 @@ public class MatrixImporter implements FileImporter {
 	}
 
 	@Override
-	public void importOptimalTour(String pathToFile) {
-		//TODO
+	public void importOptimalTour(String pathToFile) throws FileNotFoundException {
+		if(graph == null) {
+			System.out.println("Nie zaimportowano grafu dla tej ścieżki!");
+		}
+		else {
+			File file = new File(pathToFile);
+
+			if(!file.exists())
+				throw new FileNotFoundException();
+
+			Scanner scanner = new Scanner(file);
+
+			int[] optimalPath = new int[graph.getNodesCount()];
+			int counter = 0;
+
+			while(scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				String[] splitLine = line.split(" ");
+				if(splitLine.length > 1) {
+					for(int i = 0; i < splitLine.length; i++) {
+						try {
+							int verticeNo = Integer.parseInt(splitLine[0]);
+							optimalPath[counter] = verticeNo;
+							counter++;
+						} catch (Exception ignored) {
+						}
+					}
+				}
+				else {
+					try {
+						int verticeNo = Integer.parseInt(splitLine[0]);
+						if(verticeNo == -1) break;
+						optimalPath[counter] = verticeNo;
+						counter++;
+					} catch (Exception ignored) {
+					}
+				}
+			}
+			scanner.close();
+
+			graph.setOptimalPath(optimalPath);
+		}	
+	}
+	
+	public MatrixGraph getGraph() {
+		return graph;
 	}
 
 	public void printMatrix(Integer[][] table, int dimension) {

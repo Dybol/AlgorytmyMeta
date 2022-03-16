@@ -10,13 +10,13 @@ public class MatrixGraph implements Graph{
 	private int size;
 	
 	//konwencja: edges[from-1][to-1] jako krawędź od punktu <from> do punktu <to> 
-	private int [][] edges;
+	private Integer [][] edges;
 	private int[] optimalPath = null;
 	private int[] currentPath = null;
 	
-	public MatrixGraph(int [][] edges) {
-		this.edges = edges;
-		this.size = edges.length;
+	public MatrixGraph(Integer[][] cordTab) {
+		this.edges = cordTab;
+		this.size = cordTab.length;
 	}
 	
 	public void setOptimalPath(int[] node_numbers) {
