@@ -1,17 +1,22 @@
-package tsp.euc2d.model;
+package tsp.matrix.model;
 
 import java.util.ArrayList;
 
 import tsp.Graph;
 
-public class Euc2dGraph implements Graph{
+//Ta klasa zadziała zarówno dla symetrycznych i asymetrycznych grafów
+public class MatrixGraph implements Graph{
 
-	private ArrayList<Euc2d> nodes;
+	private int size;
+	
+	//konwencja: edges[from-1][to-1] jako krawędź od punktu <from> do punktu <to> 
+	private Integer [][] edges;
 	private int[] optimalPath = null;
 	private int[] currentPath = null;
 	
-	public Euc2dGraph(ArrayList<Euc2d> nodes) {
-		this.nodes = nodes;
+	public MatrixGraph(Integer[][] cordTab) {
+		this.edges = cordTab;
+		this.size = cordTab.length;
 	}
 	
 	public void setOptimalPath(int[] node_numbers) {
@@ -30,15 +35,14 @@ public class Euc2dGraph implements Graph{
 	
 	@Override
 	public double calculateDistance(int from, int to) {
-		return Math.sqrt(Math.pow((nodes.get(from-1).getCordX()-nodes.get(to-1).getCordX()), 2)
-				+ Math.pow((nodes.get(from-1).getCordY()-nodes.get(to-1).getCordY()), 2));
+		return edges[from-1][to-1];
 	}
 	
 	@Override
 	public double pathLength(int[] node_numbers) {
 		double sum = 0.0;
 		if(isPathCorrect(node_numbers)) {
-			for (int i = 0; i < (nodes.size() - 1); i++) {
+			for (int i = 0; i < (size - 1); i++) {
 				sum += calculateDistance(node_numbers[i], node_numbers[i+1]);
 			}
 			sum += calculateDistance(node_numbers[node_numbers.length - 1], node_numbers[0]);
@@ -51,7 +55,7 @@ public class Euc2dGraph implements Graph{
 
 	@Override
 	public boolean isPathCorrect(int[] node_numbers) {
-		if(node_numbers.length != nodes.size()) {
+		if(node_numbers.length != size) {
 			return false;
 		}
 		else {
@@ -60,7 +64,7 @@ public class Euc2dGraph implements Graph{
 				if(visited_points.contains(node_numbers[i])) {
 					return false;
 				}
-				else if (node_numbers[i] > nodes.size() || node_numbers[i] < 1){
+				else if (node_numbers[i] > size || node_numbers[i] < 1){
 					return false;
 				}
 				else {
@@ -92,8 +96,8 @@ public class Euc2dGraph implements Graph{
 	}
 	
 	public void printMatrix() {
-		for(int i = 0; i < nodes.size(); i++) {
-			for(int j = 0; j < nodes.size(); j++) {
+		for(int i = 0; i < edges.length; i++) {
+			for(int j = 0; j < edges.length; j++) {
 				System.out.printf("%f ", calculateDistance(i,j));
 			}
 			System.out.print("\n");
@@ -107,7 +111,7 @@ public class Euc2dGraph implements Graph{
 	}
 	
 	public int getNodesCount() {
-		return nodes.size();
+		return size;
 	}
 
 

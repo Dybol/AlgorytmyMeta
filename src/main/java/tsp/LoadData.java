@@ -2,6 +2,7 @@ package tsp;
 
 import tsp.euc2d.Euc2dImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
+import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
 import tsp.euc2d.model.Euc2dGraph;
 
@@ -16,20 +17,30 @@ public class LoadData {
 		ATSPMatrixImporter.importGraph("ft53.atsp");
 
 		TSPMatrixImporter tspMatrixImporter = new TSPMatrixImporter();
-		ATSPMatrixImporter.importGraph("swiss42.tsp");
+		tspMatrixImporter.importGraph("bays29.tsp");
+		tspMatrixImporter.importOptimalTour("bays29.opt.tour");
 
 		euc2dImporter.importGraph("pr76.tsp");
 		euc2dImporter.importOptimalTour("pr76.opt.tour");
 
 		Euc2dGraph graph = euc2dImporter.getGraph();
 		System.out.println(graph.calculateDistance(2, 4));
+		
+		MatrixGraph matrixGraph = tspMatrixImporter.getGraph();
+		System.out.println(matrixGraph.calculateDistance(2, 4));
 
 		//przykładowa ścieżka 1->2->...->76->1
 		int[] path = new int[graph.getNodesCount()];
 		for(int i = 0; i < path.length; i++) {
 			path[i] = i+1;
 		}
+		
+		int[] path2 = new int[matrixGraph.getNodesCount()];
+		for(int i = 0; i < path2.length; i++) {
+			path2[i] = i+1;
+		}
 		System.out.printf("%f %%\n", graph.PRD(path));
+		System.out.printf("%f %%\n", matrixGraph.PRD(path2));
 
 		System.out.println("-------------------------Generowanie losowych instancji--------------------------");
 

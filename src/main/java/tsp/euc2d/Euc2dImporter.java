@@ -55,29 +55,46 @@ public class Euc2dImporter implements FileImporter, InstanceGenerator<List<Euc2d
 
 	@Override
 	public void importOptimalTour(String pathToFile) throws FileNotFoundException {
-		File file = new File(pathToFile);
-
-		if(!file.exists())
-			throw new FileNotFoundException();
-
-		Scanner scanner = new Scanner(file);
-
-		int[] optimalPath = new int[graph.getNodesCount()];
-		int counter = 0;
-
-		while(scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			String[] splitLine = line.split(" ");
-			try {
-				int verticeNo = Integer.parseInt(splitLine[0]);
-				if(verticeNo == -1) break;
-				optimalPath[counter] = verticeNo;
-				counter++;
-			} catch (Exception ignored) {
-			}
+		if(graph == null) {
+			System.out.println("Nie zaimportowano grafu dla tej ścieżki!");
 		}
-		scanner.close();
+		else {
+			File file = new File(pathToFile);
 
-		graph.setOptimalPath(optimalPath);
+			if(!file.exists())
+				throw new FileNotFoundException();
+
+			Scanner scanner = new Scanner(file);
+
+			int[] optimalPath = new int[graph.getNodesCount()];
+			int counter = 0;
+
+			while(scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				String[] splitLine = line.split(" ");
+				if(splitLine.length > 1) {
+					for(int i = 0; i < splitLine.length; i++) {
+						try {
+							int verticeNo = Integer.parseInt(splitLine[0]);
+							optimalPath[counter] = verticeNo;
+							counter++;
+						} catch (Exception ignored) {
+						}
+					}
+				}
+				else {
+					try {
+						int verticeNo = Integer.parseInt(splitLine[0]);
+						if(verticeNo == -1) break;
+						optimalPath[counter] = verticeNo;
+						counter++;
+					} catch (Exception ignored) {
+					}
+				}
+			}
+			scanner.close();
+
+			graph.setOptimalPath(optimalPath);
+		}	
 	}
 }
