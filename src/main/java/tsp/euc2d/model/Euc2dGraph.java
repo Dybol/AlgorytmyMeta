@@ -17,7 +17,12 @@ public class Euc2dGraph implements Graph{
 	public Integer[] getCurrentPath() {
 		return currentPath;
 	}
-	
+
+	@Override
+	public Integer[] getOptimalPath() {
+		return optimalPath;
+	}
+
 	public void setOptimalPath(Integer[] node_numbers) {
 		if(isPathCorrect(node_numbers))
 			this.optimalPath = node_numbers;
@@ -114,7 +119,4 @@ public class Euc2dGraph implements Graph{
 	public int getNodesCount() {
 		return nodes.size();
 	}
-
-
-
 }

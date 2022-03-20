@@ -7,6 +7,8 @@ public interface Graph {
 	double calculateDistance(int from, int to);
 	void printCurrentPath();
 	Integer[] getCurrentPath();
+	Integer[] getOptimalPath();
 	void setCurrentPath(Integer [] nodes);
 	void printMatrix();
+	int getNodesCount();
 }

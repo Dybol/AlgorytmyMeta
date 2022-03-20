@@ -7,7 +7,7 @@ import tsp.Graph;
 //Ta klasa zadziała zarówno dla symetrycznych i asymetrycznych grafów
 public class MatrixGraph implements Graph{
 
-	private int size;
+	private final int size;
 	
 	//konwencja: edges[from-1][to-1] jako krawędź od punktu <from> do punktu <to> 
 	private Integer [][] edges;
@@ -18,7 +18,11 @@ public class MatrixGraph implements Graph{
 		this.edges = cordTab;
 		this.size = cordTab.length;
 	}
-	
+
+	public Integer[] getOptimalPath() {
+		return optimalPath;
+	}
+
 	public Integer[] getCurrentPath() {
 		return currentPath;
 	}
@@ -117,7 +121,4 @@ public class MatrixGraph implements Graph{
 	public int getNodesCount() {
 		return size;
 	}
-
-
-
 }
