@@ -30,7 +30,7 @@ public class LowerDiagRowImporter extends TSPMatrixImporter {
 		}
 		setGraph(new MatrixGraph(getCordTab()));
 
-		System.out.println("Zaimportowano z sukcesem!");
+		System.out.println("Zaimportowano lower diag z sukcesem!");
 		printMatrix(getCordTab(), dimension);
 		System.out.println("---------------------------");
 	}

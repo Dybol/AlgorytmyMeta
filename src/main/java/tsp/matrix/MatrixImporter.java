@@ -35,7 +35,7 @@ public class MatrixImporter extends FileImporter {
 		}
 		setGraph(new MatrixGraph(cordTab));
 
-		System.out.println("Zaimportowano z sukcesem!");
+		System.out.println("Zaimportowano matrix z sukcesem!");
 		printMatrix(cordTab, dimension);
 		System.out.println("---------------------------");
 	}
