@@ -8,7 +8,6 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.euc2d.model.Euc2dGraph;
 
 import java.io.FileNotFoundException;
 
@@ -26,7 +25,7 @@ public class LoadData {
 
 		euc2dImporter.importGraph("pr76.tsp");
 		euc2dImporter.importOptimalTour("pr76.opt.tour");
-
+		
 		LowerDiagRowImporter lowerDiagRowImporter = new LowerDiagRowImporter();
 		lowerDiagRowImporter.importGraph("gr48.tsp");
 
@@ -75,8 +74,8 @@ public class LoadData {
 		System.out.println("----------------------2OPT dla Matrix----------------------------");
 
 		Integer[] tab2 = new Integer[matrixGraph.getNodesCount()];
-		for(int i = 0; i < matrixGraph.getNodesCount(); i++) {
-			tab2[i] = i+1;
+		for (int i = 0; i < matrixGraph.getNodesCount(); i++) {
+			tab2[i] = i + 1;
 		}
 
 		matrixGraph.setCurrentPath(tab2);
