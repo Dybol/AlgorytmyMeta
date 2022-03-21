@@ -1,12 +1,14 @@
 package tsp;
 
 import tsp.algorithms.Algorithm2Opt;
+import tsp.algorithms.KRandomAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
 import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.euc2d.model.Euc2dGraph;
 
 import java.io.FileNotFoundException;
 
@@ -54,6 +56,10 @@ public class LoadData {
 		System.out.println("---------------------------------------------------------------");
 		tspMatrixImporter.printMatrix(tspMatrixImporter.generateRandomInstances(10, 100), 10);
 
+		System.out.println("---------------------------------------------------------------");
+
+		System.out.println("----------------------2OPT dla EUC2D----------------------------");
+
 		Integer[] tab = new Integer[76];
 		for (int i = 0; i <= 75; i++) {
 			tab[i] = i + 1;
@@ -62,6 +68,32 @@ public class LoadData {
 		Algorithm2Opt alg = new Algorithm2Opt(graph);
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
 		System.out.println(graph.pathLength(alg.findSolution()));
+
+		System.out.println("2opt: " + graph.pathLength(graph.getCurrentPath()));
+		System.out.println("Optymalna: " + graph.pathLength(alg.findSolution()));
+
+		System.out.println("----------------------2OPT dla Matrix----------------------------");
+
+		Integer[] tab2 = new Integer[matrixGraph.getNodesCount()];
+		for(int i = 0; i < matrixGraph.getNodesCount(); i++) {
+			tab2[i] = i+1;
+		}
+
+		matrixGraph.setCurrentPath(tab2);
+		Algorithm2Opt alg2 = new Algorithm2Opt(matrixGraph);
+		System.out.println("2opt: " + matrixGraph.pathLength(matrixGraph.getCurrentPath()));
+		System.out.println("Optymalna: " + matrixGraph.pathLength(alg2.findSolution()));
+
+		System.out.println("----------------------K-random dla EUC2D----------------------------");
+		KRandomAlgorithm kRandomAlgorithm = new KRandomAlgorithm(graph, 100000);
+		System.out.println("k-random: " + graph.pathLength(kRandomAlgorithm.findSolution()));
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
+
+
+		System.out.println("----------------------K-random dla Matrixs----------------------------");
+		KRandomAlgorithm kRandomAlgorithm2 = new KRandomAlgorithm(matrixGraph, 100000);
+		System.out.println("k-random: " + matrixGraph.pathLength(kRandomAlgorithm2.findSolution()));
+		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
 
 	}
 }
