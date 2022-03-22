@@ -1,7 +1,9 @@
 package tsp;
 
 import tsp.algorithms.Algorithm2Opt;
+import tsp.algorithms.ExtendedNearestNeighborAlgorithm;
 import tsp.algorithms.KRandomAlgorithm;
+import tsp.algorithms.NearestNeighborAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
@@ -50,9 +52,9 @@ public class LoadData {
 		ATSPMatrixImporter.printMatrix(ATSPMatrixImporter.generateRandomInstances(10, 100), 10);
 		System.out.println("---------------------------------------------------------------");
 		tspMatrixImporter.printMatrix(tspMatrixImporter.generateRandomInstances(10, 100), 10);
-		System.out.println("---------------------------------------------------------------");
+		System.out.println("\n\n---------------------------------------------------------------\n");
 
-		System.out.println("----		System.out.println(\"Startowa: \" + graph.pathLength(graph.getCurrentPath()));------------------2OPT dla EUC2D----------------------------");
+		System.out.println("------------------2OPT dla EUC2D----------------------------");
 
 		Integer[] tab = new Integer[76];
 		for(int i = 0; i <= 75; i++) {
@@ -83,10 +85,29 @@ public class LoadData {
 		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
 
 
-		System.out.println("----------------------K-random dla Matrixs----------------------------");
+		System.out.println("----------------------K-random dla Matrix----------------------------");
 		KRandomAlgorithm kRandomAlgorithm2 = new KRandomAlgorithm(matrixGraph, 100000);
 		System.out.println("k-random: " + matrixGraph.pathLength(kRandomAlgorithm2.findSolution()));
 		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
 
+		System.out.println("----------------------NearestNeighbor dla EUC2D----------------------------");
+		NearestNeighborAlgorithm nearestNeighborAlgorithm = new NearestNeighborAlgorithm(graph, 1);
+		System.out.println("NearestNeighbor: " + graph.pathLength(nearestNeighborAlgorithm.findSolution()));
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
+		
+		System.out.println("----------------------NearestNeighbor dla Matrix----------------------------");
+		NearestNeighborAlgorithm nearestNeighborAlgorithm2 = new NearestNeighborAlgorithm(matrixGraph, 1);
+		System.out.println("NearestNeighbor: " + matrixGraph.pathLength(nearestNeighborAlgorithm2.findSolution()));
+		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
+		
+		System.out.println("----------------------ExtendedNearestNeighbor dla EUC2D----------------------------");
+		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(graph);
+		System.out.println("ENN: " + graph.pathLength(exNearestNeighborAlgorithm.findSolution()));
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
+		
+		System.out.println("----------------------ExtendedNearestNeighbor dla Matrix----------------------------");
+		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm2 = new ExtendedNearestNeighborAlgorithm(matrixGraph);
+		System.out.println("ENN: " + matrixGraph.pathLength(exNearestNeighborAlgorithm2.findSolution()));
+		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
 	}
 }
