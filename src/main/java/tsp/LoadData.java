@@ -4,6 +4,7 @@ import tsp.algorithms.Algorithm2Opt;
 import tsp.algorithms.KRandomAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
+import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
@@ -24,6 +25,9 @@ public class LoadData {
 
 		euc2dImporter.importGraph("instances/pr76.tsp");
 		euc2dImporter.importOptimalTour("instances/pr76.opt.tour");
+		
+		LowerDiagRowImporter lowerDiagRowImporter = new LowerDiagRowImporter();
+		lowerDiagRowImporter.importGraph("instances/gr48.tsp");
 
 		Euc2dGraph graph = euc2dImporter.getGraph();
 		System.out.println(graph.calculateDistance(2, 4));
@@ -50,6 +54,7 @@ public class LoadData {
 		ATSPMatrixImporter.printMatrix(ATSPMatrixImporter.generateRandomInstances(10, 100), 10);
 		System.out.println("---------------------------------------------------------------");
 		tspMatrixImporter.printMatrix(tspMatrixImporter.generateRandomInstances(10, 100), 10);
+
 		System.out.println("---------------------------------------------------------------");
 
 		System.out.println("----		System.out.println(\"Startowa: \" + graph.pathLength(graph.getCurrentPath()));------------------2OPT dla EUC2D----------------------------");
@@ -60,9 +65,18 @@ public class LoadData {
 		}
 		graph.setCurrentPath(tab);
 		Algorithm2Opt alg = new Algorithm2Opt(graph);
+
 		System.out.println("Startowa: " + graph.pathLength(graph.getCurrentPath()));
 		System.out.println("Po 2opt: " + graph.pathLength(alg.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));s 2
+Actions
+Projects
+Wiki
+Security
+
+    Insights
+
+nearest-neighbor-algorithm had recent pushes 1 minute ago 
 
 		System.out.println("----------------------2OPT dla Matrix----------------------------");
 
