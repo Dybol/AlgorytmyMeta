@@ -14,20 +14,20 @@ import java.io.FileNotFoundException;
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
 		Euc2dImporter euc2dImporter = new Euc2dImporter();
-		euc2dImporter.importGraph("fl417.tsp");
+		euc2dImporter.importGraph("instances/fl417.tsp");
 
 		ATSPMatrixImporter ATSPMatrixImporter = new ATSPMatrixImporter();
-		ATSPMatrixImporter.importGraph("ft53.atsp");
+		ATSPMatrixImporter.importGraph("instances/ftv35.atsp");
 
 		TSPMatrixImporter tspMatrixImporter = new TSPMatrixImporter();
-		tspMatrixImporter.importGraph("bays29.tsp");
-		tspMatrixImporter.importOptimalTour("bays29.opt.tour");
+		tspMatrixImporter.importGraph("instances/bays29.tsp");
+		tspMatrixImporter.importOptimalTour("instances/bays29.opt.tour");
 
-		euc2dImporter.importGraph("pr76.tsp");
-		euc2dImporter.importOptimalTour("pr76.opt.tour");
+		euc2dImporter.importGraph("instances/pr76.tsp");
+		euc2dImporter.importOptimalTour("instances/pr76.opt.tour");
 		
 		LowerDiagRowImporter lowerDiagRowImporter = new LowerDiagRowImporter();
-		lowerDiagRowImporter.importGraph("gr48.tsp");
+		lowerDiagRowImporter.importGraph("instances/gr48.tsp");
 
 		Euc2dGraph graph = euc2dImporter.getGraph();
 		System.out.println(graph.calculateDistance(2, 4));
@@ -57,7 +57,7 @@ public class LoadData {
 
 		System.out.println("---------------------------------------------------------------");
 
-		System.out.println("----------------------2OPT dla EUC2D----------------------------");
+		System.out.println("----		System.out.println(\"Startowa: \" + graph.pathLength(graph.getCurrentPath()));------------------2OPT dla EUC2D----------------------------");
 
 		Integer[] tab = new Integer[76];
 		for (int i = 0; i <= 75; i++) {
@@ -65,11 +65,18 @@ public class LoadData {
 		}
 		graph.setCurrentPath(tab);
 		Algorithm2Opt alg = new Algorithm2Opt(graph);
-		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		System.out.println(graph.pathLength(alg.findSolution()));
 
-		System.out.println("2opt: " + graph.pathLength(graph.getCurrentPath()));
-		System.out.println("Optymalna: " + graph.pathLength(alg.findSolution()));
+		System.out.println("Startowa: " + graph.pathLength(graph.getCurrentPath()));
+		System.out.println("Po 2opt: " + graph.pathLength(alg.findSolution()));
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));s 2
+Actions
+Projects
+Wiki
+Security
+
+    Insights
+
+nearest-neighbor-algorithm had recent pushes 1 minute ago 
 
 		System.out.println("----------------------2OPT dla Matrix----------------------------");
 
@@ -80,8 +87,9 @@ public class LoadData {
 
 		matrixGraph.setCurrentPath(tab2);
 		Algorithm2Opt alg2 = new Algorithm2Opt(matrixGraph);
-		System.out.println("2opt: " + matrixGraph.pathLength(matrixGraph.getCurrentPath()));
-		System.out.println("Optymalna: " + matrixGraph.pathLength(alg2.findSolution()));
+		System.out.println("Startowa: " + matrixGraph.pathLength(matrixGraph.getCurrentPath()));
+		System.out.println("Po 2opt: " + matrixGraph.pathLength(alg2.findSolution()));
+		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
 
 		System.out.println("----------------------K-random dla EUC2D----------------------------");
 		KRandomAlgorithm kRandomAlgorithm = new KRandomAlgorithm(graph, 100000);
