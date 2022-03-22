@@ -70,15 +70,7 @@ public class LoadData {
 
 		System.out.println("Startowa: " + graph.pathLength(graph.getCurrentPath()));
 		System.out.println("Po 2opt: " + graph.pathLength(alg.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));s 2
-Actions
-Projects
-Wiki
-Security
-
-    Insights
-
-nearest-neighbor-algorithm had recent pushes 1 minute ago 
+		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
 
 		System.out.println("----------------------2OPT dla Matrix----------------------------");
 
