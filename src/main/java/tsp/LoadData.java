@@ -10,6 +10,7 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.tests.AlgorithmsTest;
 
 import java.io.FileNotFoundException;
 
@@ -27,7 +28,7 @@ public class LoadData {
 
 		euc2dImporter.importGraph("instances/pr76.tsp");
 		euc2dImporter.importOptimalTour("instances/pr76.opt.tour");
-		
+
 		LowerDiagRowImporter lowerDiagRowImporter = new LowerDiagRowImporter();
 		lowerDiagRowImporter.importGraph("instances/gr48.tsp");
 
@@ -100,20 +101,23 @@ public class LoadData {
 		NearestNeighborAlgorithm nearestNeighborAlgorithm = new NearestNeighborAlgorithm(graph, 1);
 		System.out.println("NearestNeighbor: " + graph.pathLength(nearestNeighborAlgorithm.findSolution()));
 		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
-		
+
 		System.out.println("----------------------NearestNeighbor dla Matrix----------------------------");
 		NearestNeighborAlgorithm nearestNeighborAlgorithm2 = new NearestNeighborAlgorithm(matrixGraph, 1);
 		System.out.println("NearestNeighbor: " + matrixGraph.pathLength(nearestNeighborAlgorithm2.findSolution()));
 		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
-		
+
 		System.out.println("----------------------ExtendedNearestNeighbor dla EUC2D----------------------------");
 		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(graph);
 		System.out.println("ENN: " + graph.pathLength(exNearestNeighborAlgorithm.findSolution()));
 		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
-		
+
 		System.out.println("----------------------ExtendedNearestNeighbor dla Matrix----------------------------");
 		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm2 = new ExtendedNearestNeighborAlgorithm(matrixGraph);
 		System.out.println("ENN: " + matrixGraph.pathLength(exNearestNeighborAlgorithm2.findSolution()));
 		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
+
+		AlgorithmsTest test = new AlgorithmsTest();
+		test.test();
 	}
 }
