@@ -9,17 +9,17 @@ import java.util.List;
 public class KRandomAlgorithm implements Algorithm {
 
 	private final Graph graph;
-	private final Integer k;
+	private Integer k;
 
 	public KRandomAlgorithm(Graph graph, int k) {
 		this.graph = graph;
 		this.k = k;
 	}
 
-	public Integer[] initRandomArray(int size) {
+	private Integer[] initRandomArray(int size) {
 		List<Integer> list = new ArrayList<>();
-		for(int i = 0; i < size; i++) {
-			list.add(i+1);
+		for (int i = 0; i < size; i++) {
+			list.add(i + 1);
 		}
 		Collections.shuffle(list);
 
@@ -35,10 +35,10 @@ public class KRandomAlgorithm implements Algorithm {
 		double bestPath = graph.pathLength(initRandomArray(size));
 		Integer[] bestSolution = new Integer[size];
 
-		for(int i = 0; i < k; i++) {
+		for (int i = 0; i < k; i++) {
 			Integer[] array = initRandomArray(size);
 			double currLength = graph.pathLength(array);
-			if(currLength < bestPath) {
+			if (currLength < bestPath) {
 				bestPath = currLength;
 				bestSolution = array;
 			}
@@ -47,4 +47,11 @@ public class KRandomAlgorithm implements Algorithm {
 		return bestSolution;
 	}
 
+	public Integer getK() {
+		return k;
+	}
+
+	public void setK(Integer k) {
+		this.k = k;
+	}
 }
