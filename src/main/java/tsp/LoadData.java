@@ -116,7 +116,6 @@ public class LoadData {
 		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm2 = new ExtendedNearestNeighborAlgorithm(matrixGraph);
 		System.out.println("ENN: " + matrixGraph.pathLength(exNearestNeighborAlgorithm2.findSolution()));
 		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
-
 		AlgorithmsTest test = new AlgorithmsTest();
 		test.test();
 	}
