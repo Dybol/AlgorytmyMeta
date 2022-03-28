@@ -9,11 +9,12 @@ import tsp.euc2d.model.Euc2dGraph;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlgorithmsTest {
+public class AlgorithmsTest implements Test {
 
 	private final List<Integer> keys = new ArrayList<>();
 	private final List<Double> values = new ArrayList<>();
 
+	@Override
 	public void test() {
 		Euc2dImporter euc2dImporter = new Euc2dImporter();
 		Euc2dGraph graph = new Euc2dGraph((ArrayList<Euc2d>) euc2dImporter.generateRandomInstances(100, 100));
@@ -30,14 +31,16 @@ public class AlgorithmsTest {
 			}
 			System.out.println("Skonczone dla " + i);
 			keys.add(i);
-			values.add(avg / 10);
+			values.add(avg / 20);
 			avg = 0;
 		}
 
 		Plot plot = Plot.create();
 
 		plot.plot().add(keys, values);
-		plot.title("test");
+		plot.title("k-random");
+		plot.xlabel("k").build();
+		plot.ylabel("best path length");
 		plot.legend();
 		try {
 			plot.show();
