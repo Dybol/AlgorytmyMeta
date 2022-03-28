@@ -10,12 +10,13 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlgorithmsTest {
+public class AlgorithmsTest implements Test {
 
 	private final List<Integer> keys = new ArrayList<>();
 	private final List<Double> values = new ArrayList<>();
 
 	public void test() throws FileNotFoundException {
+  
 		Euc2dImporter euc2dImporter = new Euc2dImporter();
 		euc2dImporter.importGraph("instances/berlin52.tsp");
 		euc2dImporter.importOptimalTour("instances/berlin52.opt.tour");
@@ -44,8 +45,9 @@ public class AlgorithmsTest {
 		Plot plot = Plot.create();
 
 		plot.plot().add(keys, values);
-		plot.plot().add(keys, valuesOpt);
-		plot.title("test");
+		plot.title("k-random");
+		plot.xlabel("k").build();
+		plot.ylabel("best path length");
 		plot.legend();
 		try {
 			plot.show();
