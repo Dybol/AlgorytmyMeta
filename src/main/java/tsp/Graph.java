@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public abstract class Graph {
 
-	private final int size;
+	private int size;
 
 	private Integer[] optimalPath = null;
 	private Integer[] currentPath = null;
@@ -33,13 +33,13 @@ public abstract class Graph {
 			return false;
 		} else {
 			ArrayList<Integer> visited_points = new ArrayList<>();
-			for (Integer node : nodes) {
-				if (visited_points.contains(node)) {
+			for (int i = 0; i < nodes.length; i++) {
+				if (visited_points.contains(nodes[i])) {
 					return false;
-				} else if (node > size || node < 1) {
+				} else if (nodes[i] > size || nodes[i] < 1) {
 					return false;
 				} else {
-					visited_points.add(node);
+					visited_points.add(nodes[i]);
 				}
 			}
 			return true;

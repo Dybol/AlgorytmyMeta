@@ -9,7 +9,7 @@ import java.util.List;
 public class KRandomAlgorithm implements Algorithm {
 
 	private final Graph graph;
-	private Integer k;
+	private int k;
 
 	public KRandomAlgorithm(Graph graph, int k) {
 		this.graph = graph;
@@ -32,10 +32,9 @@ public class KRandomAlgorithm implements Algorithm {
 	@Override
 	public Integer[] findSolution() {
 		int size = graph.getNodesCount();
-		double bestPath = graph.pathLength(initRandomArray(size));
-		Integer[] bestSolution = new Integer[size];
-
-		for (int i = 0; i < k; i++) {
+		Integer[] bestSolution = initRandomArray(size);
+		double bestPath = graph.pathLength(bestSolution);
+		for (int i = 1; i < k; i++) {
 			Integer[] array = initRandomArray(size);
 			double currLength = graph.pathLength(array);
 			if (currLength < bestPath) {
