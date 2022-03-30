@@ -30,19 +30,8 @@ public class LoadData {
 			case "1" -> fileImporter = new Euc2dImporter();
 			case "2" -> fileImporter = new ATSPMatrixImporter();
 			case "3" -> {
-				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
-				System.out.println("1 - lower diag");
-				System.out.println("2 - full matrix");
-
-				String choose = scanner.nextLine();
-				if (choose.equals("1"))
-					fileImporter = new LowerDiagRowImporter();
-				else if (choose.equals("2"))
-					fileImporter = new TSPMatrixImporter();
-				else {
-					System.out.println("bledny wybor!");
-					return;
-				}
+				fileImporter = new LowerDiagRowImporter();
+				
 			}
 			default -> {
 				System.out.println("blad");
@@ -55,6 +44,20 @@ public class LoadData {
 
 		String num = scanner.nextLine();
 		if (num.equals("1")) {
+			if(fileImporter instanceof LowerDiagRowImporter) {
+				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
+				System.out.println("1 - lower diag");
+				System.out.println("2 - full matrix");
+
+				String choose = scanner.nextLine();
+				if (choose.equals("1")) {}
+				else if (choose.equals("2"))
+					fileImporter = new TSPMatrixImporter();
+				else {
+					System.out.println("bledny wybor!");
+					return;
+				}
+			}
 			System.out.println("Podaj sciezke do pliku");
 			String path = scanner.nextLine();
 			fileImporter.importGraph(path);
@@ -81,20 +84,8 @@ public class LoadData {
 				Graph graph = new MatrixGraph(((ATSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
 				fileImporter.setGraph(graph);
 			} else {
-				System.out.println("Chcesz wygenerowac full matrix, czy lower diag?");
-				System.out.println("1 - lower diag");
-				System.out.println("2 - full matrix");
-				String choose = scanner.nextLine();
-				if (choose.equals("1")) {
-					Graph graph = new MatrixGraph(((LowerDiagRowImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
-					fileImporter.setGraph(graph);
-				} else if (choose.equals("2")) {
-					Graph graph = new MatrixGraph(((TSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
-					fileImporter.setGraph(graph);
-				} else {
-					System.out.println("Bledny wybor!");
-					return;
-				}
+				Graph graph = new MatrixGraph(((TSPMatrixImporter)fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+				fileImporter.setGraph(graph);
 			}
 		} else {
 			System.out.println("Zly numer");
@@ -155,17 +146,23 @@ public class LoadData {
 		double pathLength = fileImporter.getGraph().pathLength(sol);
 		System.out.println("Dlugosc sciezki: " + pathLength);
 		if (fileImporter.getGraph().getOptimalPath() != null) {
+			System.out.println("\nOptymalna sciezka : ");
 			printSolution(fileImporter.getGraph().getOptimalPath());
+			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		} else {
 			ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
 			fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
 			algorithm = new Algorithm2Opt(fileImporter.getGraph());
 
 			fileImporter.getGraph().setOptimalPath(algorithm.findSolution());
+			System.out.println("Dlugosc sub-optymalnej sciezki "
+					+ "(wyznaczonej przez algorytm 2-OPT, \ndla którego początkowa ścieżka została wyznaczona"
+					+ "przez rozszerzony algorytm najbliższego sąsiada): " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+			System.out.println("PRD (wyznaczone, używająć sub-optimum): " + fileImporter.getGraph().PRD(sol));
 		}
+		scanner.close();
 
-		System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
-		System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 	}
 
 	private static void printSolution(Integer[] sol) {
