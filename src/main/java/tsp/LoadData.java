@@ -59,6 +59,15 @@ public class LoadData {
 			String path = scanner.nextLine();
 			fileImporter.importGraph(path);
 
+			System.out.println("Chcesz zaimportowac optymalna sciezke?");
+			System.out.println("1 - tak");
+			System.out.println("2 - nie");
+			String choose = scanner.nextLine();
+			if (choose.equals("1")) {
+				System.out.println("Podaj sciezke do optymalnego rozwiazania");
+				String pathToTour = scanner.nextLine();
+				fileImporter.importOptimalTour(pathToTour);
+			}
 
 		} else if (num.equals("2")) {
 			System.out.println("Podaj rozmiar grafu");
@@ -145,6 +154,18 @@ public class LoadData {
 
 		double pathLength = fileImporter.getGraph().pathLength(sol);
 		System.out.println("Dlugosc sciezki: " + pathLength);
+		if (fileImporter.getGraph().getOptimalPath() != null) {
+			printSolution(fileImporter.getGraph().getOptimalPath());
+		} else {
+			ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
+			fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
+			algorithm = new Algorithm2Opt(fileImporter.getGraph());
+
+			fileImporter.getGraph().setOptimalPath(algorithm.findSolution());
+		}
+
+		System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+		System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 	}
 
 	private static void printSolution(Integer[] sol) {

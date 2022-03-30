@@ -29,7 +29,6 @@ public abstract class Graph {
 	}
 
 	public boolean isPathCorrect(Integer[] nodes) {
-		/*
 		if (nodes.length != size) {
 			return false;
 		} else {
@@ -45,8 +44,6 @@ public abstract class Graph {
 			}
 			return true;
 		}
-		*/
-		return true;
 	}
 
 	public double PRD(Integer[] path) {
