@@ -156,8 +156,16 @@ public class LoadData {
 		System.out.println("Dlugosc sciezki: " + pathLength);
 		if (fileImporter.getGraph().getOptimalPath() != null) {
 			printSolution(fileImporter.getGraph().getOptimalPath());
-			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+		} else {
+			ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
+			fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
+			algorithm = new Algorithm2Opt(fileImporter.getGraph());
+
+			fileImporter.getGraph().setOptimalPath(algorithm.findSolution());
 		}
+
+		System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+		System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 	}
 
 	private static void printSolution(Integer[] sol) {
