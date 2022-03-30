@@ -1,169 +1,111 @@
 package tsp;
 
-import tsp.algorithms.Algorithm2Opt;
-import tsp.algorithms.ExtendedNearestNeighborAlgorithm;
-import tsp.algorithms.KRandomAlgorithm;
-import tsp.algorithms.NearestNeighborAlgorithm;
+import tsp.algorithms.*;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
-import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.tests.Alg2OPTSpeedTest;
-import tsp.tests.DifferentAlgorithmsComparisonTest;
-import tsp.tests.KRandomSpeedTest;
-import tsp.tests.NeighborsSpeedTest;
-import tsp.tests.WilcoxonOptTest;
-import tsp.tests.TwoOptTest;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-		Euc2dImporter euc2dImporter = new Euc2dImporter();
-		euc2dImporter.importGraph("instances/fl417.tsp");
+		chooseOption();
+	}
 
-		ATSPMatrixImporter ATSPMatrixImporter = new ATSPMatrixImporter();
-		ATSPMatrixImporter.importGraph("instances/ftv35.atsp");
+	private static void chooseOption() throws FileNotFoundException {
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Wczytaj rodzaj problemu:");
+		System.out.println("1 - euc2d");
+		System.out.println("2 - atsp matrix");
+		System.out.println("3 - tsp matrix");
+		String problemNumber = scanner.nextLine();
+		System.out.println("Aby wczytac instancje, wybierz 1.");
+		System.out.println("Aby wygenerowac instancje, wybierz 2.");
 
-		TSPMatrixImporter tspMatrixImporter = new TSPMatrixImporter();
-		tspMatrixImporter.importGraph("instances/bays29.tsp");
-		tspMatrixImporter.importOptimalTour("instances/bays29.opt.tour");
+		FileImporter fileImporter;
 
-		euc2dImporter.importGraph("instances/pr76.tsp");
-		euc2dImporter.importOptimalTour("instances/pr76.opt.tour");
-
-		LowerDiagRowImporter lowerDiagRowImporter = new LowerDiagRowImporter();
-		lowerDiagRowImporter.importGraph("instances/gr48.tsp");
-
-		Euc2dGraph graph = euc2dImporter.getGraph();
-		System.out.println(graph.calculateDistance(2, 4));
-
-		MatrixGraph matrixGraph = tspMatrixImporter.getGraph();
-		System.out.println(matrixGraph.calculateDistance(2, 4));
-
-		//przykładowa ścieżka 1->2->...->76->1
-		Integer[] path = new Integer[graph.getNodesCount()];
-		for (int i = 0; i < path.length; i++) {
-			path[i] = i + 1;
+		switch (problemNumber) {
+			case "1" -> fileImporter = new Euc2dImporter();
+			case "2" -> fileImporter = new ATSPMatrixImporter();
+			case "3" -> fileImporter = new TSPMatrixImporter();
+			default -> {
+				System.out.println("blad");
+				return;
+			}
 		}
 
-		Integer[] path2 = new Integer[matrixGraph.getNodesCount()];
-		for (int i = 0; i < path2.length; i++) {
-			path2[i] = i + 1;
-		}
-		System.out.printf("%f %%\n", graph.PRD(path));
-		System.out.printf("%f %%\n", matrixGraph.PRD(path2));
+		String num = scanner.nextLine();
+		if (num.equals("1")) {
+			System.out.println("Podaj sciezke do pliku");
+			String path = scanner.nextLine();
+			fileImporter.importGraph(path);
 
-		System.out.println("-------------------------Generowanie losowych instancji--------------------------");
 
-		System.out.println(euc2dImporter.generateRandomInstances(100, 100));
-		ATSPMatrixImporter.printMatrix(ATSPMatrixImporter.generateRandomInstances(10, 100), 10);
-		System.out.println("---------------------------------------------------------------");
-		tspMatrixImporter.printMatrix(tspMatrixImporter.generateRandomInstances(10, 100), 10);
-
-		System.out.println("\n\n---------------------------------------------------------------\n");
-
-		System.out.println("------------------2OPT dla EUC2D----------------------------");
-
-		Integer[] tab = new Integer[76];
-		for (int i = 0; i <= 75; i++) {
-			tab[i] = i + 1;
-		}
-		graph.setCurrentPath(tab);
-		Algorithm2Opt alg = new Algorithm2Opt(graph);
-
-		System.out.println("Startowa: " + graph.pathLength(graph.getCurrentPath()));
-		System.out.println("Po 2opt: " + graph.pathLength(alg.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
-
-		System.out.println("----------------------2OPT dla Matrix----------------------------");
-
-		Integer[] tab2 = new Integer[matrixGraph.getNodesCount()];
-		for (int i = 0; i < matrixGraph.getNodesCount(); i++) {
-			tab2[i] = i + 1;
+		} else if (num.equals("2")) {
+			System.out.println("Podaj rozmiar grafu");
+			String numOfInstances = scanner.nextLine();
+			System.out.println("Podaj maksymalna wartosc");
+			String maxValue = scanner.nextLine();
+			if (fileImporter instanceof Euc2dImporter) {
+				Graph graph = new Euc2dGraph(((Euc2dImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+				fileImporter.setGraph(graph);
+			} else if (fileImporter instanceof ATSPMatrixImporter) {
+				Graph graph = new MatrixGraph(((ATSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+				fileImporter.setGraph(graph);
+			} else {
+				Graph graph = new MatrixGraph(((TSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+				fileImporter.setGraph(graph);
+			}
+		} else {
+			System.out.println("Zly numer");
+			return;
 		}
 
-		matrixGraph.setCurrentPath(tab2);
-		Algorithm2Opt alg2 = new Algorithm2Opt(matrixGraph);
-		System.out.println("Startowa: " + matrixGraph.pathLength(matrixGraph.getCurrentPath()));
-		System.out.println("Po 2opt: " + matrixGraph.pathLength(alg2.findSolution()));
-		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
+		System.out.println("Wybierz algorytm");
+		System.out.println("1 - krandom");
+		System.out.println("2 - basic neighbor");
+		System.out.println("3 - extended neighbor");
+		System.out.println("4 - 2opt");
 
-		System.out.println("----------------------K-random dla EUC2D----------------------------");
-		KRandomAlgorithm kRandomAlgorithm = new KRandomAlgorithm(graph, 100000);
-		System.out.println("k-random: " + graph.pathLength(kRandomAlgorithm.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
+		Algorithm algorithm;
 
+		String alg = scanner.nextLine();
 
-		System.out.println("----------------------K-random dla Matrix----------------------------");
-		KRandomAlgorithm kRandomAlgorithm2 = new KRandomAlgorithm(matrixGraph, 100000);
-		System.out.println("k-random: " + matrixGraph.pathLength(kRandomAlgorithm2.findSolution()));
-		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
-
-		System.out.println("----------------------NearestNeighbor dla EUC2D----------------------------");
-		NearestNeighborAlgorithm nearestNeighborAlgorithm = new NearestNeighborAlgorithm(graph, 1);
-		System.out.println("NearestNeighbor: " + graph.pathLength(nearestNeighborAlgorithm.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
-
-		System.out.println("----------------------NearestNeighbor dla Matrix----------------------------");
-		NearestNeighborAlgorithm nearestNeighborAlgorithm2 = new NearestNeighborAlgorithm(matrixGraph, 1);
-		System.out.println("NearestNeighbor: " + matrixGraph.pathLength(nearestNeighborAlgorithm2.findSolution()));
-		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
-
-		System.out.println("----------------------ExtendedNearestNeighbor dla EUC2D----------------------------");
-		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(graph);
-		System.out.println("ENN: " + graph.pathLength(exNearestNeighborAlgorithm.findSolution()));
-		System.out.println("Optymalna: " + graph.pathLength(graph.getOptimalPath()));
-
-		System.out.println("----------------------ExtendedNearestNeighbor dla Matrix----------------------------");
-		ExtendedNearestNeighborAlgorithm exNearestNeighborAlgorithm2 = new ExtendedNearestNeighborAlgorithm(matrixGraph);
-		System.out.println("ENN: " + matrixGraph.pathLength(exNearestNeighborAlgorithm2.findSolution()));
-		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
-
-//		AlgorithmsTest test = new AlgorithmsTest();
-//		test.test();
-
-//		NeighborsTest test = new NeighborsTest();
-//		test.test();
-
-		//DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
-//		differentAlgorithmsComparisonTest.test();
-
-		//differentAlgorithmsComparisonTest.testAgainstKnownSolution();
-		/*
-		KRandomSpeedTest test = new KRandomSpeedTest();
-		try {
-			test.testN();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		switch (alg) {
+			case "1" -> {
+				System.out.println("Podaj k");
+				String k = scanner.nextLine();
+				algorithm = new KRandomAlgorithm(fileImporter.getGraph(), Integer.parseInt(k));
+			}
+			case "2" -> {
+				System.out.println("Podaj punkt startowy");
+				String start = scanner.nextLine();
+				algorithm = new NearestNeighborAlgorithm(fileImporter.getGraph(), Integer.parseInt(start));
+			}
+			case "3" -> algorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
+			case "4" -> algorithm = new Algorithm2Opt(fileImporter.getGraph());
+			default -> {
+				System.out.println("blad");
+				return;
+			}
 		}
-		Alg2OPTSpeedTest test = new Alg2OPTSpeedTest();
-		try {
-			test.testGoodVsBadStart();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		Integer[] sol = algorithm.findSolution();
+
+		printSolution(sol);
+
+		double pathLength = fileImporter.getGraph().pathLength(sol);
+		System.out.println("Dlugosc sciezki: " + pathLength);
+	}
+
+	private static void printSolution(Integer[] sol) {
+		System.out.print("Sciezka: ");
+		for (Integer i : sol) {
+			System.out.print(i + " ");
 		}
-		NeighborsSpeedTest test = new NeighborsSpeedTest();
-		try {
-			test.normalVsExtended();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		*/
-		WilcoxonOptTest test = new WilcoxonOptTest();
-		test.test();
-		TwoOptTest twoOptTest = new TwoOptTest();
-		twoOptTest.test();
-//
-//		DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
-////		differentAlgorithmsComparisonTest.test();
-//
-//		differentAlgorithmsComparisonTest.testAgainstKnownSolution();
+		System.out.println();
 	}
 }
