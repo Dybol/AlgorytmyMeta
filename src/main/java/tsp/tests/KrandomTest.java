@@ -3,20 +3,20 @@ package tsp.tests;
 import com.github.sh0nk.matplotlib4j.Plot;
 import tsp.algorithms.KRandomAlgorithm;
 import tsp.euc2d.Euc2dImporter;
-import tsp.euc2d.model.Euc2d;
 import tsp.euc2d.model.Euc2dGraph;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlgorithmsTest implements Test {
+public class KrandomTest implements Test {
 
 	private final List<Integer> keys = new ArrayList<>();
 	private final List<Double> values = new ArrayList<>();
 
+	@Override
 	public void test() throws FileNotFoundException {
-  
+
 		Euc2dImporter euc2dImporter = new Euc2dImporter();
 		euc2dImporter.importGraph("instances/berlin52.tsp");
 		euc2dImporter.importOptimalTour("instances/berlin52.opt.tour");
@@ -36,7 +36,7 @@ public class AlgorithmsTest implements Test {
 			values.add(avg / 50.0);
 			avg = 0;
 		}
-		
+
 		List<Double> valuesOpt = new ArrayList<>();
 		double opt = graph.pathLength(graph.getOptimalPath());
 		for (int i = 100; i < 1000; i += 10) {

@@ -10,7 +10,7 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.tests.DifferentAlgorithmsComparisonTest;
+import tsp.tests.TwoOptTest;
 
 import java.io.FileNotFoundException;
 
@@ -117,15 +117,18 @@ public class LoadData {
 		System.out.println("ENN: " + matrixGraph.pathLength(exNearestNeighborAlgorithm2.findSolution()));
 		System.out.println("Optymalna: " + matrixGraph.pathLength(matrixGraph.getOptimalPath()));
 
-//		AlgorithmsTest test = new AlgorithmsTest();
+//		KrandomTest test = new KrandomTest();
 //		test.test();
 
 //		NeighborsTest test = new NeighborsTest();
 //		test.test();
 
-		DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
-//		differentAlgorithmsComparisonTest.test();
-
-		differentAlgorithmsComparisonTest.testAgainstKnownSolution();
+		TwoOptTest twoOptTest = new TwoOptTest();
+		twoOptTest.test();
+//
+//		DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
+////		differentAlgorithmsComparisonTest.test();
+//
+//		differentAlgorithmsComparisonTest.testAgainstKnownSolution();
 	}
 }
