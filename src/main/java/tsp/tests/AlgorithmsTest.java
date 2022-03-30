@@ -10,7 +10,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlgorithmsTest implements Test {
+public class AlgorithmsTest {
 
 	private final List<Integer> keys = new ArrayList<>();
 	private final List<Double> values = new ArrayList<>();

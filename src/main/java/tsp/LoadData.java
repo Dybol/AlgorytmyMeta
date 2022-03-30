@@ -10,9 +10,14 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.tests.Alg2OPTSpeedTest;
 import tsp.tests.DifferentAlgorithmsComparisonTest;
+import tsp.tests.KRandomSpeedTest;
+import tsp.tests.NeighborsSpeedTest;
+import tsp.tests.WilcoxonOptTest;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
@@ -123,9 +128,34 @@ public class LoadData {
 //		NeighborsTest test = new NeighborsTest();
 //		test.test();
 
-		DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
+		//DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
 //		differentAlgorithmsComparisonTest.test();
 
-		differentAlgorithmsComparisonTest.testAgainstKnownSolution();
+		//differentAlgorithmsComparisonTest.testAgainstKnownSolution();
+		/*
+		KRandomSpeedTest test = new KRandomSpeedTest();
+		try {
+			test.testN();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Alg2OPTSpeedTest test = new Alg2OPTSpeedTest();
+		try {
+			test.testGoodVsBadStart();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		NeighborsSpeedTest test = new NeighborsSpeedTest();
+		try {
+			test.normalVsExtended();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		*/
+		WilcoxonOptTest test = new WilcoxonOptTest();
+		test.test();
 	}
 }
