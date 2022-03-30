@@ -16,7 +16,7 @@ public class KRandomAlgorithm implements Algorithm {
 		this.k = k;
 	}
 
-	private Integer[] initRandomArray(int size) {
+	public Integer[] initRandomArray(int size) {
 		List<Integer> list = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			list.add(i + 1);

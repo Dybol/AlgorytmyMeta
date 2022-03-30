@@ -86,7 +86,25 @@ public class LoadData {
 				algorithm = new NearestNeighborAlgorithm(fileImporter.getGraph(), Integer.parseInt(start));
 			}
 			case "3" -> algorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
-			case "4" -> algorithm = new Algorithm2Opt(fileImporter.getGraph());
+			case "4" -> {
+				System.out.println("Jak chcesz wylonic poczatkowa sciezke?");
+				System.out.println("1 - losowe");
+				System.out.println("2 - najblizszy sasiad (rozszerzony)");
+				String choose = scanner.nextLine();
+				switch (choose) {
+					case "1" -> {
+						System.out.println("Podaj k");
+						String k = scanner.nextLine();
+						KRandomAlgorithm kRandom = new KRandomAlgorithm(fileImporter.getGraph(), Integer.parseInt(k));
+						fileImporter.getGraph().setCurrentPath(kRandom.findSolution());
+					}
+					case "2" -> {
+						ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
+						fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
+					}
+				}
+				algorithm = new Algorithm2Opt(fileImporter.getGraph());
+			}
 			default -> {
 				System.out.println("blad");
 				return;
