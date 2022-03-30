@@ -22,9 +22,9 @@ public class LowerDiagRowImporter extends TSPMatrixImporter {
 			getCordTab()[yCounter][xCounter] = cord;
 			getCordTab()[xCounter][yCounter] = cord;
 			xCounter++;
-			if (xCounter == dimension) {
+			if (xCounter > yCounter) {
 				yCounter++;
-				xCounter = yCounter;
+				xCounter = 0;
 				if (yCounter == dimension) break;
 			}
 		}
