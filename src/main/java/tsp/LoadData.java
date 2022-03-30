@@ -3,6 +3,7 @@ package tsp;
 import tsp.algorithms.*;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
+import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
@@ -21,21 +22,36 @@ public class LoadData {
 		System.out.println("1 - euc2d");
 		System.out.println("2 - atsp matrix");
 		System.out.println("3 - tsp matrix");
-		String problemNumber = scanner.nextLine();
-		System.out.println("Aby wczytac instancje, wybierz 1.");
-		System.out.println("Aby wygenerowac instancje, wybierz 2.");
 
+		String problemNumber = scanner.nextLine();
 		FileImporter fileImporter;
 
 		switch (problemNumber) {
 			case "1" -> fileImporter = new Euc2dImporter();
 			case "2" -> fileImporter = new ATSPMatrixImporter();
-			case "3" -> fileImporter = new TSPMatrixImporter();
+			case "3" -> {
+				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
+				System.out.println("1 - lower diag");
+				System.out.println("2 - full matrix");
+
+				String choose = scanner.nextLine();
+				if (choose.equals("1"))
+					fileImporter = new LowerDiagRowImporter();
+				else if (choose.equals("2"))
+					fileImporter = new TSPMatrixImporter();
+				else {
+					System.out.println("bledny wybor!");
+					return;
+				}
+			}
 			default -> {
 				System.out.println("blad");
 				return;
 			}
 		}
+
+		System.out.println("Aby wczytac instancje, wybierz 1.");
+		System.out.println("Aby wygenerowac instancje, wybierz 2.");
 
 		String num = scanner.nextLine();
 		if (num.equals("1")) {
@@ -56,8 +72,20 @@ public class LoadData {
 				Graph graph = new MatrixGraph(((ATSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
 				fileImporter.setGraph(graph);
 			} else {
-				Graph graph = new MatrixGraph(((TSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
-				fileImporter.setGraph(graph);
+				System.out.println("Chcesz wygenerowac full matrix, czy lower diag?");
+				System.out.println("1 - lower diag");
+				System.out.println("2 - full matrix");
+				String choose = scanner.nextLine();
+				if (choose.equals("1")) {
+					Graph graph = new MatrixGraph(((LowerDiagRowImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+					fileImporter.setGraph(graph);
+				} else if (choose.equals("2")) {
+					Graph graph = new MatrixGraph(((TSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+					fileImporter.setGraph(graph);
+				} else {
+					System.out.println("Bledny wybor!");
+					return;
+				}
 			}
 		} else {
 			System.out.println("Zly numer");
