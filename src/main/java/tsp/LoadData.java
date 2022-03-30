@@ -15,6 +15,7 @@ import tsp.tests.DifferentAlgorithmsComparisonTest;
 import tsp.tests.KRandomSpeedTest;
 import tsp.tests.NeighborsSpeedTest;
 import tsp.tests.WilcoxonOptTest;
+import tsp.tests.TwoOptTest;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -157,5 +158,12 @@ public class LoadData {
 		*/
 		WilcoxonOptTest test = new WilcoxonOptTest();
 		test.test();
+		TwoOptTest twoOptTest = new TwoOptTest();
+		twoOptTest.test();
+//
+//		DifferentAlgorithmsComparisonTest differentAlgorithmsComparisonTest = new DifferentAlgorithmsComparisonTest();
+////		differentAlgorithmsComparisonTest.test();
+//
+//		differentAlgorithmsComparisonTest.testAgainstKnownSolution();
 	}
 }

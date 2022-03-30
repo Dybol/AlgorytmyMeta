@@ -1,5 +1,7 @@
 package tsp.tests;
 
+import java.io.FileNotFoundException;
+
 public interface Test {
-	void test();
+	void test() throws FileNotFoundException;
 }
