@@ -35,7 +35,8 @@ public class Tabu2Opt implements Algorithm {
 			for (int i = 0; i < curSolution.length; i++) {
 				for (int j = i + 1; j < curSolution.length; j++) {
 					//todo 2 warunki
-					if (graph.pathLength(invert(newSolution, i, j)) < graph.pathLength(maxSolution) && !isOnTabuList(i, j)) {
+					if (!isOnTabuList(i, j) && graph.pathLength(invert(newSolution, i, j)) < graph.pathLength(maxSolution)) {
+						addOnTabuList(i, j);
 						maxSolution = invert(newSolution, i, j);
 						bestMove.setFirst(maxSolution);
 						bestMove.setSecond(new Move(i, j));
@@ -47,6 +48,12 @@ public class Tabu2Opt implements Algorithm {
 		}
 		while (graph.pathLength(newSolution) < graph.pathLength(curSolution));
 		return newSolution;
+	}
+
+	public void addOnTabuList(int i, int j) {
+		Move move = new Move(i, j);
+		tabuArray[tabPointer] = move;
+		increaseTabPointer();
 	}
 
 	public boolean isOnTabuList(int i, int j) {
