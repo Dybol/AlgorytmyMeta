@@ -13,7 +13,8 @@ import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-		chooseOption();
+		test();
+		//chooseOption();
 	}
 
 	private static void chooseOption() throws FileNotFoundException {
@@ -163,6 +164,20 @@ public class LoadData {
 		}
 		scanner.close();
 
+	}
+	
+	private static void test() throws FileNotFoundException {
+		FileImporter importer = new Euc2dImporter();
+		importer.importGraph("instances/berlin52.tsp");
+		Graph graph = importer.getGraph();
+		ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(importer.getGraph());
+		importer.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		Tabu2Opt alg = new Tabu2Opt(graph);
+		graph.setCurrentPath(alg.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
 	}
 
 	private static void printSolution(Integer[] sol) {

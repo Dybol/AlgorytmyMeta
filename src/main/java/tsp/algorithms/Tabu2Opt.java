@@ -7,7 +7,9 @@ import tsp.util.Pair;
 public class Tabu2Opt implements Algorithm {
 
 	Graph graph;
+	private int counter;
 
+	private static final Integer MAXCOUNTER = 400;
 	private static final Integer TENURE = 8;
 
 	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
@@ -21,6 +23,7 @@ public class Tabu2Opt implements Algorithm {
 
 	public Tabu2Opt(Graph graph) {
 		this.graph = graph;
+		counter = 0;
 	}
 
 	@Override
@@ -45,8 +48,9 @@ public class Tabu2Opt implements Algorithm {
 			}
 			newSolution = maxSolution;
 			newMove = bestMove;
+			counter++;
 		}
-		while (graph.pathLength(newSolution) < graph.pathLength(curSolution));
+		while (!stopCriterion());
 		return newSolution;
 	}
 
@@ -58,8 +62,9 @@ public class Tabu2Opt implements Algorithm {
 
 	public boolean isOnTabuList(int i, int j) {
 		for (Move move : tabuArray) {
-			if (move.getFrom() == i && move.getTo() == j)
-				return true;
+			if (move != null)
+				if (move.getFrom() == i && move.getTo() == j)
+					return true;
 		}
 		return false;
 	}
@@ -77,7 +82,13 @@ public class Tabu2Opt implements Algorithm {
 	}
 
 	public void increaseTabPointer() {
-		tabPointer += 1 % TENURE;
+		tabPointer = (tabPointer+1) % TENURE;
+	}
+	
+	public boolean stopCriterion() {
+		if(counter >= MAXCOUNTER)
+			return true;
+		return false;
 	}
 
 }
