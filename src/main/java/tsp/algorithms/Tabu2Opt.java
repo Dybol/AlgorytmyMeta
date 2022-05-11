@@ -11,7 +11,7 @@ public class Tabu2Opt implements Algorithm {
 	Graph graph;
 	private int counter;
 
-	private static final Integer MAXCOUNTER = 2000;
+	private static final Integer MAXCOUNTER = 100_000;
 	private static final Integer TENURE = 8;
 
 	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
@@ -25,7 +25,7 @@ public class Tabu2Opt implements Algorithm {
 
 	private Integer stagnationCounter = 0;
 
-	private final static Integer MAX_STAGNATION_COUNTER = 100;
+	private final static Integer MAX_STAGNATION_COUNTER = 1000;
 
 	private int tabPointer = 0;
 
@@ -45,19 +45,27 @@ public class Tabu2Opt implements Algorithm {
 			curSolution = newSolution;
 			for (int i = 0; i < curSolution.length; i++) {
 				for (int j = i + 1; j < curSolution.length; j++) {
-					if (!isOnTabuList(i, j) && graph.pathLength(invert(newSolution, i, j)) < graph.pathLength(maxSolution)) {
-						addOnTabuList(i, j);
-						maxSolution = invert(newSolution, i, j);
-						bestMove.setFirst(maxSolution);
-						bestMove.setSecond(new Move(i, j));
-						newSolution = maxSolution;
+					if (!isOnTabuList(i, j)) {
+						Integer[] invertedNewSolution = invert(newSolution, i, j);
+						if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							newMove.setFirst(invertedNewSolution);
+							newMove.setSecond(new Move(i, j));
 
-						stagnationCounter = 0;
-
-						longTermMemory.push(bestMove);
+							if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								bestMove.setSecond(new Move(i, j));
+								stagnationCounter = 0;
+								longTermMemory.push(bestMove);
+							}
+						}
 					}
 				}
 			}
+
+			addOnTabuList(newMove.getSecond());
+			newSolution = newMove.getFirst();
+
 			counter++;
 			stagnationCounter++;
 
@@ -74,11 +82,6 @@ public class Tabu2Opt implements Algorithm {
 		}
 		while (!stopCriterion());
 		return maxSolution;
-	}
-
-	public void addOnTabuList(int i, int j) {
-		Move move = new Move(i, j);
-		addOnTabuList(move);
 	}
 
 	public void addOnTabuList(Move move) {
@@ -112,9 +115,7 @@ public class Tabu2Opt implements Algorithm {
 	}
 
 	public boolean stopCriterion() {
-		if (counter >= MAXCOUNTER)
-			return true;
-		return false;
+		return counter >= MAXCOUNTER;
 	}
 
 }

@@ -32,7 +32,7 @@ public class LoadData {
 			case "2" -> fileImporter = new ATSPMatrixImporter();
 			case "3" -> {
 				fileImporter = new LowerDiagRowImporter();
-				
+
 			}
 			default -> {
 				System.out.println("blad");
@@ -45,14 +45,14 @@ public class LoadData {
 
 		String num = scanner.nextLine();
 		if (num.equals("1")) {
-			if(fileImporter instanceof LowerDiagRowImporter) {
+			if (fileImporter instanceof LowerDiagRowImporter) {
 				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
 				System.out.println("1 - lower diag");
 				System.out.println("2 - full matrix");
 
 				String choose = scanner.nextLine();
-				if (choose.equals("1")) {}
-				else if (choose.equals("2"))
+				if (choose.equals("1")) {
+				} else if (choose.equals("2"))
 					fileImporter = new TSPMatrixImporter();
 				else {
 					System.out.println("bledny wybor!");
@@ -85,7 +85,7 @@ public class LoadData {
 				Graph graph = new MatrixGraph(((ATSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
 				fileImporter.setGraph(graph);
 			} else {
-				Graph graph = new MatrixGraph(((TSPMatrixImporter)fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
+				Graph graph = new MatrixGraph(((TSPMatrixImporter) fileImporter).generateRandomInstances(Integer.parseInt(numOfInstances), Integer.parseInt(maxValue)));
 				fileImporter.setGraph(graph);
 			}
 		} else {
@@ -165,7 +165,7 @@ public class LoadData {
 		scanner.close();
 
 	}
-	
+
 	private static void test() throws FileNotFoundException {
 		FileImporter importer = new Euc2dImporter();
 		importer.importGraph("instances/berlin52.tsp");
@@ -173,11 +173,17 @@ public class LoadData {
 		ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(importer.getGraph());
 		importer.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
+
+		Algorithm2Opt algorithm2Opt = new Algorithm2Opt(graph);
+		Integer[] solution2Opt = algorithm2Opt.findSolution();
+
+		System.out.println(graph.pathLength(solution2Opt));
+
 		Tabu2Opt alg = new Tabu2Opt(graph);
 		graph.setCurrentPath(alg.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 	}
 
 	private static void printSolution(Integer[] sol) {
