@@ -4,12 +4,14 @@ import tsp.Graph;
 import tsp.tabu.Move;
 import tsp.util.Pair;
 
+import java.util.Stack;
+
 public class Tabu2Opt implements Algorithm {
 
 	Graph graph;
 	private int counter;
 
-	private static final Integer MAXCOUNTER = 400;
+	private static final Integer MAXCOUNTER = 2000;
 	private static final Integer TENURE = 8;
 
 	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
@@ -19,6 +21,12 @@ public class Tabu2Opt implements Algorithm {
 	//kryterium - lepszy od najlepszego znanego o iles %  / gorrszy o iles %
 	//kadencja - max elementow na liscie tabu
 	Move[] tabuArray = new Move[TENURE];
+	Stack<Pair<Integer[], Move>> longTermMemory = new Stack<>();
+
+	private Integer stagnationCounter = 0;
+
+	private final static Integer MAX_STAGNATION_COUNTER = 100;
+
 	private int tabPointer = 0;
 
 	public Tabu2Opt(Graph graph) {
@@ -37,25 +45,43 @@ public class Tabu2Opt implements Algorithm {
 			curSolution = newSolution;
 			for (int i = 0; i < curSolution.length; i++) {
 				for (int j = i + 1; j < curSolution.length; j++) {
-					//todo 2 warunki
 					if (!isOnTabuList(i, j) && graph.pathLength(invert(newSolution, i, j)) < graph.pathLength(maxSolution)) {
 						addOnTabuList(i, j);
 						maxSolution = invert(newSolution, i, j);
 						bestMove.setFirst(maxSolution);
 						bestMove.setSecond(new Move(i, j));
+						newSolution = maxSolution;
+
+						stagnationCounter = 0;
+
+						longTermMemory.push(bestMove);
 					}
 				}
 			}
-			newSolution = maxSolution;
-			newMove = bestMove;
 			counter++;
+			stagnationCounter++;
+
+			if (stagnationCounter >= MAX_STAGNATION_COUNTER) {
+				stagnationCounter = 0;
+				if (longTermMemory.isEmpty())
+					return maxSolution;
+				newMove = longTermMemory.pop();
+
+				newSolution = newMove.getFirst();
+				addOnTabuList(newMove.getSecond());
+			}
+
 		}
 		while (!stopCriterion());
-		return newSolution;
+		return maxSolution;
 	}
 
 	public void addOnTabuList(int i, int j) {
 		Move move = new Move(i, j);
+		addOnTabuList(move);
+	}
+
+	public void addOnTabuList(Move move) {
 		tabuArray[tabPointer] = move;
 		increaseTabPointer();
 	}
@@ -82,11 +108,11 @@ public class Tabu2Opt implements Algorithm {
 	}
 
 	public void increaseTabPointer() {
-		tabPointer = (tabPointer+1) % TENURE;
+		tabPointer = (tabPointer + 1) % TENURE;
 	}
-	
+
 	public boolean stopCriterion() {
-		if(counter >= MAXCOUNTER)
+		if (counter >= MAXCOUNTER)
 			return true;
 		return false;
 	}
