@@ -31,8 +31,19 @@ public class LoadData {
 			case "1" -> fileImporter = new Euc2dImporter();
 			case "2" -> fileImporter = new ATSPMatrixImporter();
 			case "3" -> {
-				fileImporter = new LowerDiagRowImporter();
+				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
+				System.out.println("1 - lower diag");
+				System.out.println("2 - full matrix");
 
+				String choose = scanner.nextLine();
+				if (choose.equals("1"))
+					fileImporter = new LowerDiagRowImporter();
+				else if (choose.equals("2"))
+					fileImporter = new TSPMatrixImporter();
+				else {
+					System.out.println("bledny wybor!");
+					return;
+				}
 			}
 			default -> {
 				System.out.println("blad");
@@ -45,20 +56,6 @@ public class LoadData {
 
 		String num = scanner.nextLine();
 		if (num.equals("1")) {
-			if (fileImporter instanceof LowerDiagRowImporter) {
-				System.out.println("Chcesz wczytac full matrix, czy lower diag?");
-				System.out.println("1 - lower diag");
-				System.out.println("2 - full matrix");
-
-				String choose = scanner.nextLine();
-				if (choose.equals("1")) {
-				} else if (choose.equals("2"))
-					fileImporter = new TSPMatrixImporter();
-				else {
-					System.out.println("bledny wybor!");
-					return;
-				}
-			}
 			System.out.println("Podaj sciezke do pliku");
 			String path = scanner.nextLine();
 			fileImporter.importGraph(path);
