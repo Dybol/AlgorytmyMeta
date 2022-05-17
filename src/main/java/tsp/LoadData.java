@@ -165,19 +165,68 @@ public class LoadData {
 
 	private static void test() throws FileNotFoundException {
 		FileImporter importer = new Euc2dImporter();
-		importer.importGraph("instances/berlin52.tsp");
+		importer.importGraph("instances/pr124.tsp");
 		Graph graph = importer.getGraph();
 		ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(importer.getGraph());
-		importer.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
+		graph.setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
 
 		Algorithm2Opt algorithm2Opt = new Algorithm2Opt(graph);
 		Integer[] solution2Opt = algorithm2Opt.findSolution();
-
+		graph.setCurrentPath(solution2Opt);
 		System.out.println(graph.pathLength(solution2Opt));
-
-		Tabu2Opt alg = new Tabu2Opt(graph);
+		
+		Tabu2Opt alg = new Tabu2Opt(graph, 50000, 7, 1000, 1);
 		graph.setCurrentPath(alg.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2Opt alg2 = new Tabu2Opt(graph, 50000, 7, 0.2, 500, 1);
+		graph.setCurrentPath(alg2.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2Opt alg3 = new Tabu2Opt(graph, 50000, 11, 1000, 1);
+		graph.setCurrentPath(alg3.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2Opt alg4 = new Tabu2Opt(graph, 50000, 11, 0.2, 500, 1);
+		graph.setCurrentPath(alg4.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2OptWithVNS alg5 = new Tabu2OptWithVNS(graph, 50000, 7, 1000);
+		graph.setCurrentPath(alg5.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2OptWithVNS alg6 = new Tabu2OptWithVNS(graph, 50000, 7, 0.2, 500);
+		graph.setCurrentPath(alg6.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2OptWithVNS alg7 = new Tabu2OptWithVNS(graph, 50000, 11, 1000);
+		graph.setCurrentPath(alg7.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+		
+		graph.setCurrentPath(solution2Opt);
+		
+		Tabu2OptWithVNS alg8 = new Tabu2OptWithVNS(graph, 50000, 11, 0.2, 500);
+		graph.setCurrentPath(alg8.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
 
