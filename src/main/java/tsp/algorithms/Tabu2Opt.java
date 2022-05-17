@@ -8,11 +8,11 @@ import java.util.Stack;
 
 public class Tabu2Opt implements Algorithm {
 
-	Graph graph;
+	private final Graph graph;
 	private int counter;
 
-	private static final Integer MAXCOUNTER = 100_000;
-	private static final Integer TENURE = 8;
+	private Integer MAX_COUNTER = 100_000;
+	private Integer TENURE = 8;
 
 	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
 	//reset -> losowe rozwiazanie - NIE
@@ -20,14 +20,21 @@ public class Tabu2Opt implements Algorithm {
 	//gdy zadna sciezka nie dala poprawy i wracamy do poczatku, to reset / losowy / koniec
 	//kryterium - lepszy od najlepszego znanego o iles %  / gorrszy o iles %
 	//kadencja - max elementow na liscie tabu
-	Move[] tabuArray = new Move[TENURE];
-	Stack<Pair<Integer[], Move>> longTermMemory = new Stack<>();
+	private final Move[] tabuArray = new Move[TENURE];
+	private final Stack<Pair<Integer[], Move>> longTermMemory = new Stack<>();
 
 	private Integer stagnationCounter = 0;
 
-	private final static Integer MAX_STAGNATION_COUNTER = 1000;
+	private Integer MAX_STAGNATION_COUNTER = 1000;
 
 	private int tabPointer = 0;
+
+	public Tabu2Opt(Graph graph, Integer maxCounter, Integer tenure, Integer maxStagnationCounter) {
+		this.graph = graph;
+		this.MAX_COUNTER = maxCounter;
+		this.TENURE = tenure;
+		this.MAX_STAGNATION_COUNTER = maxStagnationCounter;
+	}
 
 	public Tabu2Opt(Graph graph) {
 		this.graph = graph;
@@ -115,7 +122,6 @@ public class Tabu2Opt implements Algorithm {
 	}
 
 	public boolean stopCriterion() {
-		return counter >= MAXCOUNTER;
+		return counter >= MAX_COUNTER;
 	}
-
 }
