@@ -1,4 +1,4 @@
-package tsp.algorithms;
+package tsp.algorithms.tabu;
 
 import tsp.Graph;
 import tsp.tabu.Move;
@@ -6,14 +6,9 @@ import tsp.util.Pair;
 
 import java.util.Stack;
 
-public class Tabu2OptWithVNS implements Algorithm {
+public class Tabu2OptWithVNS extends TabuAlgorithm {
 
-	private final Graph graph;
-	private int counter;
 	private Integer neighborhoodType = 1;
-
-	private Integer MAX_COUNTER = 100000;
-	private Integer TENURE = 7;
 
 	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
 	//reset -> losowe rozwiazanie - NIE
@@ -21,51 +16,42 @@ public class Tabu2OptWithVNS implements Algorithm {
 	//gdy zadna sciezka nie dala poprawy i wracamy do poczatku, to reset / losowy / koniec
 	//kryterium - lepszy od najlepszego znanego o iles %  / gorrszy o iles %
 	//kadencja - max elementow na liscie tabu
-	private Move[] tabuArray = new Move[TENURE];
 	private final Stack<Pair<Integer[], Move>> longTermMemory = new Stack<>();
 
 	private Integer stagnationCounter = 0;
 
-	private int MAX_STAGNATION_COUNTER = 1000;
-	private double STAGNATION_MULTIPLIER = 0.0;
-	private int STAGNATION_CONSTANT = 1000;
-	
 	private boolean isSCLinear = false;
-	
-	private int tabPointer = 0;
+
+	public Tabu2OptWithVNS(Graph graph, Boolean stopOnCounter, Integer maxCounter, Integer maxExecutionTime, Integer TENURE, int maxStagnationCounter) {
+		super(graph, maxCounter, TENURE, maxStagnationCounter, maxExecutionTime);
+		this.setStopOnCounter(stopOnCounter);
+	}
 
 	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant) {
-		this.graph = graph;
-		this.MAX_COUNTER = maxCounter;
-		this.TENURE = tenure;
-		this.STAGNATION_CONSTANT = stagnationConstant;
-		this.STAGNATION_MULTIPLIER = 0.0;
+		super(graph, maxCounter, tenure, stagnationConstant);
+		this.setStagnationMultiplier(0.0);
 		this.isSCLinear = false;
-		this.MAX_STAGNATION_COUNTER = stagnationConstant;
-		tabuArray = new Move[TENURE];
+		this.setMaxStagnationCounter(stagnationConstant);
 	}
-	
+
 	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant) {
-		this.graph = graph;
-		this.MAX_COUNTER = maxCounter;
-		this.TENURE = tenure;
-		this.STAGNATION_CONSTANT = stagnationConstant;
-		this.STAGNATION_MULTIPLIER = stagnationMultiplier;
+		super(graph, maxCounter, tenure, stagnationMultiplier, stagnationConstant);
 		this.isSCLinear = true;
-		this.MAX_STAGNATION_COUNTER = (int)Math.floor(stagnationCounter*stagnationMultiplier + stagnationConstant);
-		tabuArray = new Move[TENURE];
 	}
 
 	public Tabu2OptWithVNS(Graph graph) {
-		this.graph = graph;
-		counter = 0;
+		super(graph);
+		setCounter(0);
 	}
 
 	@Override
 	public Integer[] findSolution() {
+		// get current time
+		long now = System.currentTimeMillis();
+
 		Integer[] curSolution;
-		Integer[] newSolution = graph.getCurrentPath();
-		Integer[] maxSolution = graph.getCurrentPath();
+		Integer[] newSolution = getGraph().getCurrentPath();
+		Integer[] maxSolution = getGraph().getCurrentPath();
 		Pair<Integer[], Move> bestMove = new Pair<>();
 		Pair<Integer[], Move> newMove = new Pair<>();
 		boolean noMovesFoundYet;
@@ -78,11 +64,11 @@ public class Tabu2OptWithVNS implements Algorithm {
 		boolean bestStreak = false;
 		Integer[] previousMaxSolution = new Integer[newSolution.length];
 		do {
-			if(timeToSave == 0) {
+			if (timeToSave == 0) {
 				bestMove.setSecond(newMove.getSecond());
 				longTermMemory.push(bestMove);
 			}
-			if(timeToSave > -1)
+			if (timeToSave > -1)
 				timeToSave--;
 			if (neighborhoodType == 1) {
 				noMovesFoundYet = true;
@@ -91,13 +77,13 @@ public class Tabu2OptWithVNS implements Algorithm {
 					for (int j = i + 1; j < curSolution.length; j++) {
 						if (!isOnTabuList(i, j)) {
 							Integer[] invertedNewSolution = invert(newSolution, i, j);
-							if(noMovesFoundYet) {
+							if (noMovesFoundYet) {
 								newSolution = invertedNewSolution;
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -106,13 +92,12 @@ public class Tabu2OptWithVNS implements Algorithm {
 									bestMove.setFirst(maxSolution);
 									stagnationCounter = 0;
 								}
-							}
-							else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
-	
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -125,21 +110,20 @@ public class Tabu2OptWithVNS implements Algorithm {
 						}
 					}
 				}
-			}
-			else if (neighborhoodType == 2) {
+			} else if (neighborhoodType == 2) {
 				noMovesFoundYet = true;
 				curSolution = newSolution;
 				for (int i = 0; i < curSolution.length; i++) {
 					for (int j = i + 1; j < curSolution.length; j++) {
 						if (!isOnTabuList(i, j)) {
 							Integer[] invertedNewSolution = swap(newSolution, i, j);
-							if(noMovesFoundYet) {
+							if (noMovesFoundYet) {
 								newSolution = invertedNewSolution;
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -148,13 +132,12 @@ public class Tabu2OptWithVNS implements Algorithm {
 									bestMove.setFirst(maxSolution);
 									stagnationCounter = 0;
 								}
-							}
-							else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
-	
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -167,21 +150,20 @@ public class Tabu2OptWithVNS implements Algorithm {
 						}
 					}
 				}
-			}
-			else if (neighborhoodType == 3) {
+			} else if (neighborhoodType == 3) {
 				noMovesFoundYet = true;
 				curSolution = newSolution;
 				for (int i = 0; i < curSolution.length; i++) {
 					for (int j = 0; j < curSolution.length; j++) {
 						if (!isOnTabuList(i, j)) {
 							Integer[] invertedNewSolution = insert(newSolution, i, j);
-							if(noMovesFoundYet) {
+							if (noMovesFoundYet) {
 								newSolution = invertedNewSolution;
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(j, i));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -190,13 +172,12 @@ public class Tabu2OptWithVNS implements Algorithm {
 									bestMove.setFirst(maxSolution);
 									stagnationCounter = 0;
 								}
-							}
-							else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(j, i));
-	
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
-									if(timeToSave == 0) {
+
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -213,108 +194,40 @@ public class Tabu2OptWithVNS implements Algorithm {
 			addOnTabuList(newMove.getSecond());
 			newSolution = newMove.getFirst();
 
-			counter++;
+			increaseCounter();
 			stagnationCounter++;
-			
-			if(bestStreak == true) {
-				if(neighborhoodType == 3)
-					longTermMemory.push(new Pair<Integer[], Move>(previousMaxSolution, new Move(newMove.getSecond().getTo(), newMove.getSecond().getFrom())));
+
+			if (bestStreak) {
+				if (neighborhoodType == 3)
+					longTermMemory.push(new Pair<>(previousMaxSolution, new Move(newMove.getSecond().getTo(), newMove.getSecond().getFrom())));
 				else
-					longTermMemory.push(new Pair<Integer[], Move>(previousMaxSolution, newMove.getSecond()));
+					longTermMemory.push(new Pair<>(previousMaxSolution, newMove.getSecond()));
 				bestStreak = false;
 			}
 
-			if (stagnationCounter >= MAX_STAGNATION_COUNTER) {
+			if (stagnationCounter >= getMaxStagnationCounter()) {
 				stagnationCounter = 0;
-				if(isSCLinear) {
-					MAX_STAGNATION_COUNTER = (int)Math.floor(stagnationCounter*STAGNATION_MULTIPLIER + STAGNATION_CONSTANT);
+				if (isSCLinear) {
+					setMaxStagnationCounter((int) Math.floor(stagnationCounter * getStagnationMultiplier() + getStagnationConstant()));
 				}
-				if(neighborhoodType < 3) {
+				if (neighborhoodType < 3) {
 					neighborhoodType++;
-					System.out.println(neighborhoodType + " " + graph.pathLength(maxSolution));
-				}
-				else {
+					System.out.println(neighborhoodType + " " + getGraph().pathLength(maxSolution));
+				} else {
 					neighborhoodType = 1;
 					if (longTermMemory.isEmpty()) {
 						return maxSolution;
-					}
-					else
+					} else
 						newMove = longTermMemory.pop();
-	
+
 					newSolution = newMove.getFirst();
 					addOnTabuList(newMove.getSecond());
 				}
 			}
 		}
-		while (!stopCriterion());
-		
+		while (!stopCriterion(now));
+
 		return maxSolution;
 
-	}
-
-	public void addOnTabuList(Move move) {
-		tabuArray[tabPointer] = move;
-		increaseTabPointer();
-	}
-
-	public boolean isOnTabuList(int i, int j) {
-		for (Move move : tabuArray) {
-			if (move != null) {
-				if (move.getFrom() == i && move.getTo() == j)
-					return true;
-				//fragment kodu sprawdzający szczególny przypadek:
-				//invert(i,i+1) = invert(i+1,i) = swap(i,i+1) = swap(i+1, i) = insert(i, i+1) = insert(i+1, i)
-				if (i == j+1 || i == j-1)
-					if (move.getFrom() == j && move.getTo() == i)
-						return true;
-			}
-		}
-		return false;
-	}
-
-	public Integer[] invert(Integer[] tab, int from, int to) {
-		Integer[] tabPom = new Integer[tab.length];
-		for (int i = 0; i < tab.length; i++) {
-			if (i < from || i > to) {
-				tabPom[i] = tab[i];
-			} else {
-				tabPom[i] = tab[to - (i - from)];
-			}
-		}
-		return tabPom;
-	}
-	
-	public Integer[] swap(Integer[] tab, int from, int to) {
-		Integer[] tabPom = tab.clone();
-		Integer help = tabPom[from];
-		tabPom[from] = tabPom[to];
-		tabPom[to] = help;
-		return tabPom;
-	}
-	
-	public Integer[] insert(Integer[] tab, int from, int to) {
-		Integer[] tabPom = tab.clone();
-		Integer toInsert = tabPom[from];
-		if(from < to) {
-			for(int i = from; i < to; i++) {
-				tabPom[i] = tabPom[i+1];
-			}
-			tabPom[to] = toInsert;
-		}
-		else if(from > to) {
-			for(int i = from; i > to; i--) {
-				tabPom[i] = tabPom[i-1];
-			}
-			tabPom[to] = toInsert;
-		}
-		return tabPom;
-	}
-
-	public void increaseTabPointer() {
-		tabPointer = (tabPointer + 1) % TENURE;
-	}
-
-	public boolean stopCriterion() {
-		return counter >= MAX_COUNTER;
 	}
 }

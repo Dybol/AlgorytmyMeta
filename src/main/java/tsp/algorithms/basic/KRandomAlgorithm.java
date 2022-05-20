@@ -1,6 +1,7 @@
-package tsp.algorithms;
+package tsp.algorithms.basic;
 
 import tsp.Graph;
+import tsp.algorithms.Algorithm;
 
 import java.util.ArrayList;
 import java.util.Collections;

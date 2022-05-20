@@ -1,6 +1,13 @@
 package tsp;
 
-import tsp.algorithms.*;
+import tsp.algorithms.Algorithm;
+import tsp.algorithms.basic.Algorithm2Opt;
+import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.basic.KRandomAlgorithm;
+import tsp.algorithms.basic.NearestNeighborAlgorithm;
+import tsp.algorithms.tabu.Tabu2Opt;
+import tsp.algorithms.tabu.Tabu2OptWithAspiration;
+import tsp.algorithms.tabu.Tabu2OptWithVNS;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
 import tsp.matrix.LowerDiagRowImporter;
@@ -14,7 +21,7 @@ import java.util.Scanner;
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
 		test();
-		//chooseOption();
+//		chooseOption();
 	}
 
 	private static void chooseOption() throws FileNotFoundException {
@@ -160,7 +167,6 @@ public class LoadData {
 			System.out.println("PRD (wyznaczone, używająć sub-optimum): " + fileImporter.getGraph().PRD(sol));
 		}
 		scanner.close();
-
 	}
 
 	private static void test() throws FileNotFoundException {
@@ -175,56 +181,78 @@ public class LoadData {
 		Integer[] solution2Opt = algorithm2Opt.findSolution();
 		graph.setCurrentPath(solution2Opt);
 		System.out.println(graph.pathLength(solution2Opt));
-		
-		Tabu2Opt alg = new Tabu2Opt(graph, 50000, 7, 1000, 1);
-		graph.setCurrentPath(alg.findSolution());
+
+		System.out.println("-----------------");
+
+//		Tabu2OptWithVNS alg = new Tabu2OptWithVNS(graph, 50000, 7, 100);
+//		graph.setCurrentPath(alg.findSolution());
+//		printSolution(graph.getCurrentPath());
+//		System.out.println(graph.pathLength(graph.getCurrentPath()));
+//
+//		graph.setCurrentPath(solution2Opt);
+
+		System.out.println("With time: ");
+		Tabu2OptWithVNS algWithTime = new Tabu2OptWithVNS(graph, false, null, 3 * 1000, 7, 100);
+		graph.setCurrentPath(algWithTime.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
-		Tabu2Opt alg2 = new Tabu2Opt(graph, 50000, 7, 0.2, 500, 1);
+
+		System.out.println("With counter: ");
+		Tabu2OptWithVNS algWithCounter = new Tabu2OptWithVNS(graph, true, 500, null, 7, 100);
+		graph.setCurrentPath(algWithCounter.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+
+		graph.setCurrentPath(solution2Opt);
+
+		System.out.println("end");
+
+		Tabu2OptWithAspiration alg2 = new Tabu2OptWithAspiration(graph, 500, 7, 1000, 1);
 		graph.setCurrentPath(alg2.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
+		System.out.println("---------------");
+
 		Tabu2Opt alg3 = new Tabu2Opt(graph, 50000, 11, 1000, 1);
 		graph.setCurrentPath(alg3.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
 		Tabu2Opt alg4 = new Tabu2Opt(graph, 50000, 11, 0.2, 500, 1);
 		graph.setCurrentPath(alg4.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
 		Tabu2OptWithVNS alg5 = new Tabu2OptWithVNS(graph, 50000, 7, 1000);
 		graph.setCurrentPath(alg5.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
 		Tabu2OptWithVNS alg6 = new Tabu2OptWithVNS(graph, 50000, 7, 0.2, 500);
 		graph.setCurrentPath(alg6.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
 		Tabu2OptWithVNS alg7 = new Tabu2OptWithVNS(graph, 50000, 11, 1000);
 		graph.setCurrentPath(alg7.findSolution());
 		printSolution(graph.getCurrentPath());
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
-		
+
 		graph.setCurrentPath(solution2Opt);
-		
+
 		Tabu2OptWithVNS alg8 = new Tabu2OptWithVNS(graph, 50000, 11, 0.2, 500);
 		graph.setCurrentPath(alg8.findSolution());
 		printSolution(graph.getCurrentPath());
