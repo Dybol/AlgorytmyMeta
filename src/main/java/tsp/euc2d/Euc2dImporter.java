@@ -27,16 +27,16 @@ public class Euc2dImporter extends FileImporter implements InstanceGenerator<Lis
 
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
-			String[] splitLine = line.split(" ");
+			String[] splitLine = line.trim().split("\\s+");
 			try {
 				coordinatesList.add(new Euc2d(Integer.parseInt(splitLine[1]), Integer.parseInt(splitLine[2])));
 			} catch (Exception ignored) {
 				try {
-					Integer x = (int) Math.round(Double.parseDouble(splitLine[1]));
-					Integer y = (int) Math.round(Double.parseDouble(splitLine[2]));
+					int x = (int) Math.round(Double.parseDouble(splitLine[1]));
+					int y = (int) Math.round(Double.parseDouble(splitLine[2]));
 					coordinatesList.add(new Euc2d(x, y));
 				} catch (Exception ignored2) {
-					
+
 				}
 			}
 		}
