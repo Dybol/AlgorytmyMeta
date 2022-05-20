@@ -1,13 +1,11 @@
 package tsp;
 
-import tsp.algorithms.Algorithm;
 import tsp.algorithms.basic.Algorithm2Opt;
 import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
-import tsp.algorithms.basic.KRandomAlgorithm;
-import tsp.algorithms.basic.NearestNeighborAlgorithm;
 import tsp.algorithms.tabu.Tabu2Opt;
 import tsp.algorithms.tabu.Tabu2OptWithAspiration;
 import tsp.algorithms.tabu.Tabu2OptWithVNS;
+import tsp.algorithms.tabu.TabuAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
 import tsp.matrix.LowerDiagRowImporter;
@@ -20,8 +18,10 @@ import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-		test();
-//		chooseOption();
+//		test();
+		chooseOption();
+//		MaxCounterTest maxCounterTest = new MaxCounterTest();
+//		maxCounterTest.test();
 	}
 
 	private static void chooseOption() throws FileNotFoundException {
@@ -98,46 +98,60 @@ public class LoadData {
 		}
 
 		System.out.println("Wybierz algorytm");
-		System.out.println("1 - krandom");
-		System.out.println("2 - basic neighbor");
-		System.out.println("3 - extended neighbor");
-		System.out.println("4 - 2opt");
+		System.out.println("1 - tabu 2opt");
+		System.out.println("2 - tabu 2opt with Aspiration");
+		System.out.println("3 - tabu 2opt with VNS");
 
-		Algorithm algorithm;
+		TabuAlgorithm algorithm;
 
 		String alg = scanner.nextLine();
 
+		System.out.println("Co ma byc kryterium stopu?");
+		System.out.println("1 - ilosc iteracji");
+		System.out.println("2 - czas dzialania algorytmu");
+
+		String stop = scanner.nextLine();
+
+		String iterations = null;
+		String millis = null;
+		if ("1".equals(stop)) {
+			System.out.println("Podaj liczbe maksymalnych iteracji");
+			iterations = scanner.nextLine();
+		} else if ("2".equals(stop)) {
+			System.out.println("Podaj ilosc ms, po jakiej program ma sie skonczyc");
+			millis = scanner.nextLine();
+		}
+
+		System.out.println("Podaj dlugosc listy tabu");
+		String tenure = scanner.nextLine();
+
+		System.out.println("Podaj maksymalna ilosc iteracji dla stagnacji");
+		String maxStagnationCounter = scanner.nextLine();
+
+		Integer maxIterations = iterations == null ? null : Integer.parseInt(iterations);
+		Integer maxMillis = millis == null ? null : Integer.parseInt(millis);
+
+		String neighbourhoodType = "1";
+
+		if (alg.equals("1") || alg.equals("2")) {
+			// 1 - invert
+			// 2 - swap
+			// 3 - insert
+			System.out.println("Podaj typ sasiedzctwa:");
+			System.out.println("1 - invert");
+			System.out.println("2 - swap");
+			System.out.println("3 - insert");
+			neighbourhoodType = scanner.nextLine();
+		}
+
+		System.out.println("Algorytm sie uruchamia..............");
+
+		fileImporter.getGraph().setCurrentPath(new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph()).findSolution());
+
 		switch (alg) {
-			case "1" -> {
-				System.out.println("Podaj k");
-				String k = scanner.nextLine();
-				algorithm = new KRandomAlgorithm(fileImporter.getGraph(), Integer.parseInt(k));
-			}
-			case "2" -> {
-				System.out.println("Podaj punkt startowy");
-				String start = scanner.nextLine();
-				algorithm = new NearestNeighborAlgorithm(fileImporter.getGraph(), Integer.parseInt(start));
-			}
-			case "3" -> algorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
-			case "4" -> {
-				System.out.println("Jak chcesz wylonic poczatkowa sciezke?");
-				System.out.println("1 - losowe");
-				System.out.println("2 - najblizszy sasiad (rozszerzony)");
-				String choose = scanner.nextLine();
-				switch (choose) {
-					case "1" -> {
-						System.out.println("Podaj k");
-						String k = scanner.nextLine();
-						KRandomAlgorithm kRandom = new KRandomAlgorithm(fileImporter.getGraph(), Integer.parseInt(k));
-						fileImporter.getGraph().setCurrentPath(kRandom.findSolution());
-					}
-					case "2" -> {
-						ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
-						fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
-					}
-				}
-				algorithm = new Algorithm2Opt(fileImporter.getGraph());
-			}
+			case "1" -> algorithm = new Tabu2Opt(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter), Integer.parseInt(neighbourhoodType));
+			case "2" -> algorithm = new Tabu2OptWithAspiration(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter), Integer.parseInt(neighbourhoodType));
+			case "3" -> algorithm = new Tabu2OptWithVNS(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter));
 			default -> {
 				System.out.println("blad");
 				return;
@@ -156,9 +170,10 @@ public class LoadData {
 			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
 			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		} else {
+			//TODO: w jaki sposob teraz generujemy 'najlepsze' rozwiazanie ??
 			ExtendedNearestNeighborAlgorithm extendedNearestNeighborAlgorithm = new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph());
 			fileImporter.getGraph().setCurrentPath(extendedNearestNeighborAlgorithm.findSolution());
-			algorithm = new Algorithm2Opt(fileImporter.getGraph());
+			algorithm = new Tabu2Opt(fileImporter.getGraph());
 
 			fileImporter.getGraph().setOptimalPath(algorithm.findSolution());
 			System.out.println("Dlugosc sub-optymalnej sciezki "
@@ -184,12 +199,12 @@ public class LoadData {
 
 		System.out.println("-----------------");
 
-//		Tabu2OptWithVNS alg = new Tabu2OptWithVNS(graph, 50000, 7, 100);
-//		graph.setCurrentPath(alg.findSolution());
-//		printSolution(graph.getCurrentPath());
-//		System.out.println(graph.pathLength(graph.getCurrentPath()));
-//
-//		graph.setCurrentPath(solution2Opt);
+		Tabu2OptWithVNS alg = new Tabu2OptWithVNS(graph, 50000, 7, 100);
+		graph.setCurrentPath(alg.findSolution());
+		printSolution(graph.getCurrentPath());
+		System.out.println(graph.pathLength(graph.getCurrentPath()));
+
+		graph.setCurrentPath(solution2Opt);
 
 		System.out.println("With time: ");
 		Tabu2OptWithVNS algWithTime = new Tabu2OptWithVNS(graph, false, null, 3 * 1000, 7, 100);

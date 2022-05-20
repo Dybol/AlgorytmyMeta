@@ -23,6 +23,11 @@ public class Tabu2Opt extends TabuAlgorithm {
 
 	private boolean isSCLinear = false;
 
+	public Tabu2Opt(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, int maxStagnationCounter, int neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, maxStagnationCounter);
+		this.neighborhoodType = neighborhoodType;
+	}
+
 	public Tabu2Opt(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
 		super(graph, maxCounter, tenure, stagnationConstant);
 		this.setStagnationMultiplier(0.0);

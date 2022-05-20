@@ -22,6 +22,10 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 	private boolean isSCLinear = false;
 
+	public Tabu2OptWithVNS(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, int maxStagnationCounter) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, maxStagnationCounter);
+	}
+
 	public Tabu2OptWithVNS(Graph graph, Boolean stopOnCounter, Integer maxCounter, Integer maxExecutionTime, Integer TENURE, int maxStagnationCounter) {
 		super(graph, maxCounter, TENURE, maxStagnationCounter, maxExecutionTime);
 		this.setStopOnCounter(stopOnCounter);
