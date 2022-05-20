@@ -1,22 +1,22 @@
-package tsp.tests;
+package tsp.tests.basic;
 
-import java.util.ArrayList;
 import org.apache.commons.math3.stat.inference.WilcoxonSignedRankTest;
-
-import tsp.algorithms.Algorithm2Opt;
-import tsp.algorithms.ExtendedNearestNeighborAlgorithm;
-import tsp.algorithms.KRandomAlgorithm;
+import tsp.algorithms.basic.Algorithm2Opt;
+import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.basic.KRandomAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2d;
 import tsp.euc2d.model.Euc2dGraph;
 
+import java.util.ArrayList;
+
 public class WilcoxonOptTest {
-	double ExOPT[] = new double [100];
-	double opt[] = new double [100];
-	
+	double ExOPT[] = new double[100];
+	double opt[] = new double[100];
+
 	public void test() {
 		Euc2dImporter euc2dImporter = new Euc2dImporter();
-		for(int i = 0; i < 100; i++) {
+		for (int i = 0; i < 100; i++) {
 			Euc2dGraph graph = new Euc2dGraph((ArrayList<Euc2d>) euc2dImporter.generateRandomInstances(100, 100));
 			KRandomAlgorithm rand = new KRandomAlgorithm(graph, 10);
 			ExtendedNearestNeighborAlgorithm neigh = new ExtendedNearestNeighborAlgorithm(graph);

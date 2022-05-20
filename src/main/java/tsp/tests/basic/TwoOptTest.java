@@ -1,11 +1,12 @@
-package tsp.tests;
+package tsp.tests.basic;
 
 import com.github.sh0nk.matplotlib4j.Plot;
-import tsp.algorithms.Algorithm2Opt;
-import tsp.algorithms.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.basic.Algorithm2Opt;
+import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2d;
 import tsp.euc2d.model.Euc2dGraph;
+import tsp.tests.Test;
 
 import java.util.ArrayList;
 import java.util.List;
