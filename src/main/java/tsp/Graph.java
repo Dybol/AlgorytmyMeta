@@ -29,6 +29,8 @@ public abstract class Graph {
 	}
 
 	public boolean isPathCorrect(Integer[] nodes) {
+		return true;
+		/* Fajne ale psuje złożoność!!!!
 		if (nodes.length != size) {
 			return false;
 		} else {
@@ -44,6 +46,7 @@ public abstract class Graph {
 			}
 			return true;
 		}
+		*/
 	}
 
 	public double PRD(Integer[] path) {

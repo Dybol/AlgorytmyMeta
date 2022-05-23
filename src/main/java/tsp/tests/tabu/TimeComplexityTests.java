@@ -26,10 +26,10 @@ public class TimeComplexityTests {
 		Euc2dImporter eucImporter = new Euc2dImporter();
 		FileImporter ATSPMatrixImporter = new ATSPMatrixImporter();
 		FileImporter lowerDiagImporter = new LowerDiagRowImporter();
-		FileWriter fileWriter = new FileWriter("wyniki_zlozonosc_euc2d.txt");
+		FileWriter fileWriter = new FileWriter("wyniki_zlozonosc_euc2d_new.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
 	    
-	    for (int i = 20; i <= 150; i += 10) {
+	    for (int i = 20; i <= 50; i += 10) {
 	    	double avgTimeInsert = 0.0;
 	    	long timeSumInsert = 0;
 	    	double avgTimeSwap = 0.0;
@@ -39,19 +39,19 @@ public class TimeComplexityTests {
 	    	for(int k = 0; k < 20; k++) {
 	    		Euc2dGraph graph = new Euc2dGraph((ArrayList<Euc2d>) eucImporter.generateRandomInstances(i, 2*i - 1));
 				graph.setCurrentPath(generatePath(i));
-				Tabu2Opt algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 20, 3);
+				Tabu2Opt algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 100, 3);
 				Instant before = Instant.now();
 				algorithm.findSolution();
 				Instant after = Instant.now();
 				timeSumInsert += Duration.between(before, after).toMillis();
 				
-				algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 20, 2);
+				algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 100, 2);
 				before = Instant.now();
 				algorithm.findSolution();
 				after = Instant.now();
 				timeSumSwap += Duration.between(before, after).toMillis();
 				
-				algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 20, 1);
+				algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 100, 1);
 				before = Instant.now();
 				algorithm.findSolution();
 				after = Instant.now();
