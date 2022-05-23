@@ -32,12 +32,15 @@ public abstract class TabuAlgorithm implements Algorithm {
 		this.stopOnCounter = stopOnCounter;
 		this.tenure = tenure;
 		this.maxStagnationCounter = maxStagnationCounter;
+		tabuArray = new Move[tenure];
 	}
 
-	public TabuAlgorithm(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant) {
+	public TabuAlgorithm(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant) {
 		this.graph = graph;
 		this.maxCounter = maxCounter;
 		this.tenure = tenure;
+		this.maxExecutionTime = maxExecutionTime;
+		this.stopOnCounter = stopOnCounter;
 		this.stagnationConstant = stagnationConstant;
 		this.stagnationMultiplier = stagnationMultiplier;
 		this.maxStagnationCounter = (int) Math.floor(stagnationCounter * stagnationMultiplier + stagnationConstant);

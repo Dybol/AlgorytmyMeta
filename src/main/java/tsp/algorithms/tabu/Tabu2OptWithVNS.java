@@ -31,16 +31,18 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 		this.setStopOnCounter(stopOnCounter);
 	}
 
-	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant) {
-		super(graph, maxCounter, tenure, stagnationConstant);
+	public Tabu2OptWithVNS(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, 0.0, stagnationConstant);
 		this.setStagnationMultiplier(0.0);
 		this.isSCLinear = false;
+		this.neighborhoodType = neighborhoodType;
 		this.setMaxStagnationCounter(stagnationConstant);
 	}
 
-	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant) {
-		super(graph, maxCounter, tenure, stagnationMultiplier, stagnationConstant);
+	public Tabu2OptWithVNS(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, stagnationMultiplier, stagnationConstant);
 		this.isSCLinear = true;
+		this.neighborhoodType = neighborhoodType;
 	}
 
 	public Tabu2OptWithVNS(Graph graph) {

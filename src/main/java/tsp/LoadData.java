@@ -12,16 +12,23 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.tests.tabu.TimeComplexityTests;
+import tsp.tests.tabu.TypesComparisonTest;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class LoadData {
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 //		test();
-		chooseOption();
+//		chooseOption();
 //		MaxCounterTest maxCounterTest = new MaxCounterTest();
 //		maxCounterTest.test();
+//		TypesComparisonTest typesTest = new TypesComparisonTest();
+//		typesTest.test();
+		TimeComplexityTests timeTest = new TimeComplexityTests();
+		timeTest.test();
 	}
 
 	private static void chooseOption() throws FileNotFoundException {
@@ -183,7 +190,7 @@ public class LoadData {
 		}
 		scanner.close();
 	}
-
+/* DO POPRAWY
 	private static void test() throws FileNotFoundException {
 		FileImporter importer = new Euc2dImporter();
 		importer.importGraph("instances/pr124.tsp");
@@ -274,7 +281,7 @@ public class LoadData {
 		System.out.println(graph.pathLength(graph.getCurrentPath()));
 
 	}
-
+*/
 	private static void printSolution(Integer[] sol) {
 		System.out.print("Sciezka: ");
 		for (Integer i : sol) {

@@ -25,7 +25,7 @@ public abstract class Graph {
 		} else {
 			sum = -1.0;
 		}
-		return sum;
+		return Math.round(sum * 100.0) / 100.0;
 	}
 
 	public boolean isPathCorrect(Integer[] nodes) {
