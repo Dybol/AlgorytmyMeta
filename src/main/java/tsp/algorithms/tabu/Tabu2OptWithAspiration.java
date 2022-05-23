@@ -1,4 +1,4 @@
-package tsp.algorithms;
+package tsp.algorithms.tabu;
 
 import tsp.Graph;
 import tsp.tabu.Move;
@@ -6,71 +6,47 @@ import tsp.util.Pair;
 
 import java.util.Stack;
 
-public class Tabu2OptWithAspiration implements Algorithm {
+public class Tabu2OptWithAspiration extends TabuAlgorithm {
 
-	private final Graph graph;
-	private int counter;
 	// 1 - invert
 	// 2 - swap
 	// 3 - insert
 	private Integer neighborhoodType = 1;
 
-	private Integer MAX_COUNTER = 100_000;
-	private Integer TENURE = 7;
-
-	//przechowujemy atrybtuty ruchu ? gdy mamy n(i,j) to wrzucamy n(j,i)
-	//reset -> losowe rozwiazanie - NIE
-	//zapamietujemy rozwiazania po drodze, gdy mamy stagnacje to wracamy do poprzednio najlepszego rozwiazania i idziemy w inna strone
-	//gdy zadna sciezka nie dala poprawy i wracamy do poczatku, to reset / losowy / koniec
-	//kryterium - lepszy od najlepszego znanego o iles %  / gorrszy o iles %
-	//kadencja - max elementow na liscie tabu
-	private Move[] tabuArray = new Move[TENURE];
 	private final Stack<Pair<Integer[], Move>> longTermMemory = new Stack<>();
-
-	private Integer stagnationCounter = 0;
-
-	private int MAX_STAGNATION_COUNTER = 1000;
-	private double STAGNATION_MULTIPLIER = 0.0;
-	private int STAGNATION_CONSTANT = 1000;
 
 	private boolean isSCLinear = false;
 
-	private int tabPointer = 0;
+	public Tabu2OptWithAspiration(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, int maxStagnationCounter, int neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, maxStagnationCounter);
+		this.neighborhoodType = neighborhoodType;
+	}
 
 	public Tabu2OptWithAspiration(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
-		this.graph = graph;
-		this.MAX_COUNTER = maxCounter;
-		this.TENURE = tenure;
-		this.STAGNATION_CONSTANT = stagnationConstant;
-		this.STAGNATION_MULTIPLIER = 0.0;
+		super(graph, maxCounter, tenure, stagnationConstant);
+		setStagnationMultiplier(0.0);
 		this.isSCLinear = false;
 		this.neighborhoodType = neighborhoodType;
-		this.MAX_STAGNATION_COUNTER = stagnationConstant;
-		tabuArray = new Move[TENURE];
+		setMaxStagnationCounter(stagnationConstant);
 	}
 
 	public Tabu2OptWithAspiration(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, Integer neighborhoodType) {
-		this.graph = graph;
-		this.MAX_COUNTER = maxCounter;
-		this.TENURE = tenure;
-		this.STAGNATION_CONSTANT = stagnationConstant;
-		this.STAGNATION_MULTIPLIER = stagnationMultiplier;
+		super(graph, maxCounter, tenure, stagnationMultiplier, stagnationConstant);
 		this.isSCLinear = true;
 		this.neighborhoodType = neighborhoodType;
-		this.MAX_STAGNATION_COUNTER = (int) Math.floor(stagnationCounter * stagnationMultiplier + stagnationConstant);
-		tabuArray = new Move[TENURE];
 	}
 
 	public Tabu2OptWithAspiration(Graph graph) {
-		this.graph = graph;
-		counter = 0;
+		super(graph);
 	}
 
 	@Override
 	public Integer[] findSolution() {
+		long now = System.currentTimeMillis();
+
 		Integer[] curSolution;
-		Integer[] newSolution = graph.getCurrentPath();
-		Integer[] maxSolution = graph.getCurrentPath();
+		Integer[] newSolution = getGraph().getCurrentPath();
+		Integer[] maxSolution = getGraph().getCurrentPath();
 		Pair<Integer[], Move> bestMove = new Pair<>();
 		Pair<Integer[], Move> newMove = new Pair<>();
 		boolean noMovesFoundYet;
@@ -101,7 +77,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -109,13 +85,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
-							} else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -123,13 +99,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
 							}
 						} else {
 							Integer[] invertedNewSolution = invert(newSolution, i, j);
 
-							if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
@@ -137,7 +113,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								timeToSave = 1;
 								maxSolution = invertedNewSolution;
 								bestMove.setFirst(maxSolution);
-								stagnationCounter = 0;
+								resetStagnationCounter();
 							}
 						}
 					}
@@ -146,19 +122,19 @@ public class Tabu2OptWithAspiration implements Algorithm {
 				addOnTabuList(newMove.getSecond());
 				newSolution = newMove.getFirst();
 
-				counter++;
-				stagnationCounter++;
+				increaseCounter();
+				increaseStagnationCounter();
 
-				if (bestStreak == true) {
-					longTermMemory.push(new Pair<Integer[], Move>(previousMaxSolution, newMove.getSecond()));
+				if (bestStreak) {
+					longTermMemory.push(new Pair<>(previousMaxSolution, newMove.getSecond()));
 					bestStreak = false;
 				}
 
-				if (stagnationCounter >= MAX_STAGNATION_COUNTER) {
-					stagnationCounter = 0;
+				if (getStagnationCounter() >= getMaxStagnationCounter()) {
+					resetStagnationCounter();
 
 					if (isSCLinear) {
-						MAX_STAGNATION_COUNTER = (int) Math.floor(stagnationCounter * STAGNATION_MULTIPLIER + STAGNATION_CONSTANT);
+						setMaxStagnationCounter((int) Math.floor(getStagnationCounter() * getStagnationMultiplier() + getStagnationConstant()));
 					}
 					if (longTermMemory.isEmpty())
 						return maxSolution;
@@ -168,7 +144,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 					addOnTabuList(newMove.getSecond());
 				}
 			}
-			while (!stopCriterion());
+			while (!stopCriterion(now));
 		} else if (neighborhoodType == 2) {
 			do {
 				if (timeToSave == 0) {
@@ -188,7 +164,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -196,13 +172,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
-							} else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(i, j));
 
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -210,13 +186,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
 							}
 						} else {
 							Integer[] invertedNewSolution = invert(newSolution, i, j);
-							
-							if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
@@ -224,7 +200,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								timeToSave = 1;
 								maxSolution = invertedNewSolution;
 								bestMove.setFirst(maxSolution);
-								stagnationCounter = 0;
+								resetStagnationCounter();
 							}
 						}
 					}
@@ -233,19 +209,19 @@ public class Tabu2OptWithAspiration implements Algorithm {
 				addOnTabuList(newMove.getSecond());
 				newSolution = newMove.getFirst();
 
-				counter++;
-				stagnationCounter++;
+				increaseCounter();
+				increaseStagnationCounter();
 
-				if (bestStreak == true) {
-					longTermMemory.push(new Pair<Integer[], Move>(previousMaxSolution, newMove.getSecond()));
+				if (bestStreak) {
+					longTermMemory.push(new Pair<>(previousMaxSolution, newMove.getSecond()));
 					bestStreak = false;
 				}
 
-				if (stagnationCounter >= MAX_STAGNATION_COUNTER) {
-					stagnationCounter = 0;
+				if (getStagnationCounter() >= getMaxStagnationCounter()) {
+					resetStagnationCounter();
 
 					if (isSCLinear) {
-						MAX_STAGNATION_COUNTER = (int) Math.floor(stagnationCounter * STAGNATION_MULTIPLIER + STAGNATION_CONSTANT);
+						setMaxStagnationCounter((int) Math.floor(getStagnationCounter() * getStagnationMultiplier() + getStagnationConstant()));
 					}
 
 					if (longTermMemory.isEmpty())
@@ -256,7 +232,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 					addOnTabuList(newMove.getSecond());
 				}
 			}
-			while (!stopCriterion());
+			while (!stopCriterion(now));
 		} else if (neighborhoodType == 3) {
 			do {
 				if (timeToSave == 0) {
@@ -276,7 +252,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(j, i));
 								noMovesFoundYet = false;
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -284,13 +260,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
-							} else if (graph.pathLength(invertedNewSolution) < graph.pathLength(newSolution)) {
+							} else if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(newSolution)) {
 								newMove.setFirst(invertedNewSolution);
 								newMove.setSecond(new Move(j, i));
 
-								if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
@@ -298,13 +274,13 @@ public class Tabu2OptWithAspiration implements Algorithm {
 									timeToSave = 1;
 									maxSolution = invertedNewSolution;
 									bestMove.setFirst(maxSolution);
-									stagnationCounter = 0;
+									resetStagnationCounter();
 								}
 							}
 						} else {
 							Integer[] invertedNewSolution = invert(newSolution, i, j);
 
-							if (graph.pathLength(invertedNewSolution) < graph.pathLength(maxSolution)) {
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
@@ -312,7 +288,7 @@ public class Tabu2OptWithAspiration implements Algorithm {
 								timeToSave = 1;
 								maxSolution = invertedNewSolution;
 								bestMove.setFirst(maxSolution);
-								stagnationCounter = 0;
+								resetStagnationCounter();
 							}
 						}
 					}
@@ -321,19 +297,19 @@ public class Tabu2OptWithAspiration implements Algorithm {
 				addOnTabuList(newMove.getSecond());
 				newSolution = newMove.getFirst();
 
-				counter++;
-				stagnationCounter++;
+				increaseCounter();
+				increaseStagnationCounter();
 
-				if (bestStreak == true) {
-					longTermMemory.push(new Pair<Integer[], Move>(previousMaxSolution, new Move(newMove.getSecond().getTo(), newMove.getSecond().getFrom())));
+				if (bestStreak) {
+					longTermMemory.push(new Pair<>(previousMaxSolution, new Move(newMove.getSecond().getTo(), newMove.getSecond().getFrom())));
 					bestStreak = false;
 				}
 
-				if (stagnationCounter >= MAX_STAGNATION_COUNTER) {
-					stagnationCounter = 0;
+				if (getStagnationCounter() >= getMaxStagnationCounter()) {
+					resetStagnationCounter();
 
 					if (isSCLinear) {
-						MAX_STAGNATION_COUNTER = (int) Math.floor(stagnationCounter * STAGNATION_MULTIPLIER + STAGNATION_CONSTANT);
+						setMaxStagnationCounter((int) Math.floor(getStagnationCounter() * getStagnationMultiplier() + getStagnationConstant()));
 					}
 
 					if (longTermMemory.isEmpty())
@@ -345,69 +321,10 @@ public class Tabu2OptWithAspiration implements Algorithm {
 				}
 
 			}
-			while (!stopCriterion());
+			while (!stopCriterion(now));
 		}
 
 		return maxSolution;
 
-	}
-
-	public void addOnTabuList(Move move) {
-		tabuArray[tabPointer] = move;
-		increaseTabPointer();
-	}
-
-	public boolean isOnTabuList(int i, int j) {
-		for (Move move : tabuArray) {
-			if (move != null)
-				if (move.getFrom() == i && move.getTo() == j)
-					return true;
-		}
-		return false;
-	}
-
-	public Integer[] invert(Integer[] tab, int from, int to) {
-		Integer[] tabPom = new Integer[tab.length];
-		for (int i = 0; i < tab.length; i++) {
-			if (i < from || i > to) {
-				tabPom[i] = tab[i];
-			} else {
-				tabPom[i] = tab[to - (i - from)];
-			}
-		}
-		return tabPom;
-	}
-
-	public Integer[] swap(Integer[] tab, int from, int to) {
-		Integer[] tabPom = tab.clone();
-		Integer help = tabPom[from];
-		tabPom[from] = tabPom[to];
-		tabPom[to] = help;
-		return tabPom;
-	}
-
-	public Integer[] insert(Integer[] tab, int from, int to) {
-		Integer[] tabPom = tab.clone();
-		Integer toInsert = tabPom[from];
-		if (from < to) {
-			for (int i = from; i < to; i++) {
-				tabPom[i] = tabPom[i + 1];
-			}
-			tabPom[to] = toInsert;
-		} else if (from > to) {
-			for (int i = from; i > to; i--) {
-				tabPom[i] = tabPom[i - 1];
-			}
-			tabPom[to] = toInsert;
-		}
-		return tabPom;
-	}
-
-	public void increaseTabPointer() {
-		tabPointer = (tabPointer + 1) % TENURE;
-	}
-
-	public boolean stopCriterion() {
-		return counter >= MAX_COUNTER;
 	}
 }

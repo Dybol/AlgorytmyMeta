@@ -1,4 +1,11 @@
-package tsp.tests;
+package tsp.tests.basic;
+
+import com.github.sh0nk.matplotlib4j.Plot;
+import tsp.algorithms.basic.Algorithm2Opt;
+import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.basic.KRandomAlgorithm;
+import tsp.matrix.model.MatrixGraph;
+import tsp.matrix.tsp.TSPMatrixImporter;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -8,17 +15,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.sh0nk.matplotlib4j.Plot;
-
-import tsp.algorithms.Algorithm2Opt;
-import tsp.algorithms.ExtendedNearestNeighborAlgorithm;
-import tsp.algorithms.KRandomAlgorithm;
-import tsp.euc2d.Euc2dImporter;
-import tsp.euc2d.model.Euc2d;
-import tsp.euc2d.model.Euc2dGraph;
-import tsp.matrix.model.MatrixGraph;
-import tsp.matrix.tsp.TSPMatrixImporter;
-
 public class Alg2OPTSpeedTest {
 
 	private final List<Integer> keysEuclid = new ArrayList<>();
@@ -27,7 +23,7 @@ public class Alg2OPTSpeedTest {
 	private final List<Integer> keysTSP = new ArrayList<>();
 	private final List<Double> valuesTSPRand = new ArrayList<>();
 	private final List<Double> valuesTSPNeigh = new ArrayList<>();
-	
+
 	public void testGoodVsBadStart() throws IOException {
 		/*
 		FileWriter fileWriter = new FileWriter("wyniki_2OPT_sciezki_euclid.txt");
@@ -80,16 +76,16 @@ public class Alg2OPTSpeedTest {
 		}
 
 		*/
-		
+
 		FileWriter fileWriterTSP = new FileWriter("wyniki_2OPT_sciezki_TSP.txt");
-	    PrintWriter printWriterTSP = new PrintWriter(fileWriterTSP);
+		PrintWriter printWriterTSP = new PrintWriter(fileWriterTSP);
 		TSPMatrixImporter TSPImporter = new TSPMatrixImporter();
 		MatrixGraph graphTSP;
-		for(int n = 5; n <= 100; n+=5) {
+		for (int n = 5; n <= 100; n += 5) {
 			long timeElapsedRand = 0;
 			long timeElapsedNeigh = 0;
 
-			for(int r = 0; r < 100; r++) {
+			for (int r = 0; r < 100; r++) {
 				graphTSP = new MatrixGraph(TSPImporter.generateRandomInstances(n, n));
 				ExtendedNearestNeighborAlgorithm neighbor = new ExtendedNearestNeighborAlgorithm(graphTSP);
 				KRandomAlgorithm random = new KRandomAlgorithm(graphTSP, 100);
@@ -106,9 +102,9 @@ public class Alg2OPTSpeedTest {
 				timeElapsedNeigh += Duration.between(start, finish).toMillis();
 			}
 
-			double timeElapsedPerOneRand = (double)timeElapsedRand / 10.0;
-			double timeElapsedPerOneNeigh = (double)timeElapsedNeigh / 10.0;
-			
+			double timeElapsedPerOneRand = (double) timeElapsedRand / 10.0;
+			double timeElapsedPerOneNeigh = (double) timeElapsedNeigh / 10.0;
+
 			keysTSP.add(n);
 			valuesTSPRand.add(timeElapsedPerOneRand);
 			valuesTSPNeigh.add(timeElapsedPerOneNeigh);

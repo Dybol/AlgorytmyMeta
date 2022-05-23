@@ -1,9 +1,10 @@
-package tsp.tests;
+package tsp.tests.basic;
 
 import com.github.sh0nk.matplotlib4j.Plot;
-import tsp.algorithms.KRandomAlgorithm;
+import tsp.algorithms.basic.KRandomAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
+import tsp.tests.Test;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
