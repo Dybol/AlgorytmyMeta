@@ -29,14 +29,14 @@ public class TimeComplexityTests {
 		FileWriter fileWriter = new FileWriter("wyniki_zlozonosc_euc2d_new.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
 	    
-	    for (int i = 20; i <= 50; i += 10) {
+	    for (int i = 20; i <= 150; i += 10) {
 	    	double avgTimeInsert = 0.0;
 	    	long timeSumInsert = 0;
 	    	double avgTimeSwap = 0.0;
 	    	long timeSumSwap = 0;
 	    	double avgTimeInvert = 0.0;
 	    	long timeSumInvert = 0;
-	    	for(int k = 0; k < 20; k++) {
+	    	for(int k = 0; k < 30; k++) {
 	    		Euc2dGraph graph = new Euc2dGraph((ArrayList<Euc2d>) eucImporter.generateRandomInstances(i, 2*i - 1));
 				graph.setCurrentPath(generatePath(i));
 				Tabu2Opt algorithm = new Tabu2Opt(graph, 0, 100, true, 7, 0.1, 100, 3);
