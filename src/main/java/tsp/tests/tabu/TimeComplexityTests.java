@@ -57,9 +57,9 @@ public class TimeComplexityTests {
 				after = Instant.now();
 				timeSumInvert += Duration.between(before, after).toMillis();
 	    	}
-	    	avgTimeInsert = timeSumInsert / 20.0;
-	    	avgTimeSwap = timeSumSwap / 20.0;
-	    	avgTimeInvert = timeSumInvert / 20.0;
+	    	avgTimeInsert = timeSumInsert / 30.0;
+	    	avgTimeSwap = timeSumSwap / 30.0;
+	    	avgTimeInvert = timeSumInvert / 30.0;
 	    	printWriter.println(i + ";" + avgTimeInvert + ";" + avgTimeSwap + ";" + avgTimeInsert);
 	    	System.out.println(i);
 		}
