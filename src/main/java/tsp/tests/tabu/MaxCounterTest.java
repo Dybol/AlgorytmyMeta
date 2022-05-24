@@ -40,9 +40,9 @@ public class MaxCounterTest implements Test {
 
 
 		for (int i = 10000; i <= 100_000; i += 10000) {
-			Tabu2Opt tabu2Opt = new Tabu2Opt(graph, i, 7, 5000, 1);
-			Tabu2OptWithVNS tabu2OptWithVNS = new Tabu2OptWithVNS(graph, i, 7, 5000);
-			Tabu2OptWithAspiration tabu2OptWithAspiration = new Tabu2OptWithAspiration(graph, i, 11, 5000, 1);
+			Tabu2Opt tabu2Opt = new Tabu2Opt(graph, null, i, true, 7, 5000, 1);
+			Tabu2OptWithVNS tabu2OptWithVNS = new Tabu2OptWithVNS(graph, null, i, true, 7, 5000);
+			Tabu2OptWithAspiration tabu2OptWithAspiration = new Tabu2OptWithAspiration(graph, null, i, true, 11, 5000, 1);
 
 			keys.add(i);
 			valuesTabu2Opt.add(graph.pathLength(tabu2Opt.findSolution()));
