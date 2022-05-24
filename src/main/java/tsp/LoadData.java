@@ -12,6 +12,7 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.tests.tabu.TenureSizeTestATSP;
 import tsp.tests.tabu.TenureSizeTestTSP;
 import tsp.tests.tabu.TimeComplexityTests;
 import tsp.tests.tabu.TypesComparisonTest;
@@ -30,8 +31,8 @@ public class LoadData {
 //		typesTest.test();
 //		TimeComplexityTests timeTest = new TimeComplexityTests();
 //		timeTest.test();
-		TenureSizeTestTSP tenureTestTSP = new TenureSizeTestTSP();
-		tenureTestTSP.test();
+		TenureSizeTestATSP tenureTestATSP = new TenureSizeTestATSP();
+		tenureTestATSP.test();
 	}
 
 	private static void chooseOption() throws FileNotFoundException {
