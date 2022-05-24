@@ -17,21 +17,21 @@ public class Tabu2OptWithAspiration extends TabuAlgorithm {
 
 	private boolean isSCLinear = false;
 
-	public Tabu2OptWithAspiration(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, int maxStagnationCounter, int neighborhoodType) {
-		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, maxStagnationCounter);
-		this.neighborhoodType = neighborhoodType;
-	}
+//	public Tabu2OptWithAspiration(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, int maxStagnationCounter, int neighborhoodType) {
+//		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, maxStagnationCounter);
+//		this.neighborhoodType = neighborhoodType;
+//	}
 
-	public Tabu2OptWithAspiration(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
-		super(graph, maxCounter, tenure, stagnationConstant);
+	public Tabu2OptWithAspiration(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, 0.0, stagnationConstant);
 		setStagnationMultiplier(0.0);
 		this.isSCLinear = false;
 		this.neighborhoodType = neighborhoodType;
 		setMaxStagnationCounter(stagnationConstant);
 	}
 
-	public Tabu2OptWithAspiration(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, Integer neighborhoodType) {
-		super(graph, maxCounter, tenure, stagnationMultiplier, stagnationConstant);
+	public Tabu2OptWithAspiration(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, stagnationMultiplier, stagnationConstant);
 		this.isSCLinear = true;
 		this.neighborhoodType = neighborhoodType;
 	}

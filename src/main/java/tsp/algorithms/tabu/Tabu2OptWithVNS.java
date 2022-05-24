@@ -31,16 +31,18 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 		this.setStopOnCounter(stopOnCounter);
 	}
 
-	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Integer stagnationConstant) {
-		super(graph, maxCounter, tenure, stagnationConstant);
+	public Tabu2OptWithVNS(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, 0.0, stagnationConstant);
 		this.setStagnationMultiplier(0.0);
 		this.isSCLinear = false;
+		this.neighborhoodType = neighborhoodType;
 		this.setMaxStagnationCounter(stagnationConstant);
 	}
 
-	public Tabu2OptWithVNS(Graph graph, Integer maxCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant) {
-		super(graph, maxCounter, tenure, stagnationMultiplier, stagnationConstant);
+	public Tabu2OptWithVNS(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, Integer neighborhoodType) {
+		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, stagnationMultiplier, stagnationConstant);
 		this.isSCLinear = true;
+		this.neighborhoodType = neighborhoodType;
 	}
 
 	public Tabu2OptWithVNS(Graph graph) {
@@ -111,6 +113,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									stagnationCounter = 0;
 								}
 							}
+						} else {
+							Integer[] invertedNewSolution = invert(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
+							}
 						}
 					}
 				}
@@ -150,6 +165,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									bestMove.setFirst(maxSolution);
 									stagnationCounter = 0;
 								}
+							}
+						} else {
+							Integer[] invertedNewSolution = swap(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
 							}
 						}
 					}
@@ -191,6 +219,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									stagnationCounter = 0;
 								}
 							}
+						} else {
+							Integer[] invertedNewSolution = insert(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
+							}
 						}
 					}
 				}
@@ -216,7 +257,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 				}
 				if (neighborhoodType < 3) {
 					neighborhoodType++;
-					System.out.println(neighborhoodType + " " + getGraph().pathLength(maxSolution));
+					//System.out.println(neighborhoodType + " " + getGraph().pathLength(maxSolution));
 				} else {
 					neighborhoodType = 1;
 					if (longTermMemory.isEmpty()) {
