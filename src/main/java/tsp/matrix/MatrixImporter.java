@@ -52,7 +52,7 @@ public class MatrixImporter extends FileImporter {
 		while (scanner.hasNextLine())
 			allLines.add(scanner.nextLine());
 
-		int dimension = Integer.parseInt(allLines.get(3).split(" ")[1]);
+		int dimension = Integer.parseInt(allLines.get(3).split("\\s+")[1]);
 
 		cordTab = new Integer[dimension][dimension];
 
