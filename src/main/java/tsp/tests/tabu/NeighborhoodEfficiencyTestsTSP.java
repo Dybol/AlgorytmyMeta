@@ -17,7 +17,7 @@ public class NeighborhoodEfficiencyTestsTSP {
 		FileWriter fileWriter = new FileWriter("wyniki_compare_tsp_normal.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
 	    
-	    for(int i = 20; i <= 200; i++) {
+	    for(int i = 20; i <= 200; i+=10) {
 	    	double avgPRDInsert = 0.0;
 	    	double avgPRDSwap = 0.0;
 	    	double avgPRDInvert = 0.0;
@@ -25,17 +25,17 @@ public class NeighborhoodEfficiencyTestsTSP {
 	    		MatrixGraph graph = new MatrixGraph(TSPMatrixImporter.generateRandomInstances(i, 2*i - 1));
 	    		ExtendedNearestNeighborAlgorithm startAlg = new ExtendedNearestNeighborAlgorithm(graph);
 				graph.setCurrentPath(startAlg.findSolution());
-				Tabu2OptWithVNS algorithm = new Tabu2OptWithVNS(graph, 300000, 1000, false, i, 0.1, 50, 1);
+				Tabu2OptWithVNS algorithm = new Tabu2OptWithVNS(graph, 300000, 1000, false, 7, 0.1, 50, 1);
 				graph.setOptimalPath(algorithm.findSolution());
 				
 				
-				Tabu2OptWithAspiration algorithmInsert = new Tabu2OptWithAspiration(graph, 300000, 1000, false, i, 0.1, 50, 3);
+				Tabu2OptWithAspiration algorithmInsert = new Tabu2OptWithAspiration(graph, 300000, 1000, false, 7, 0.1, 50, 3);
 				avgPRDInsert += graph.PRD(algorithmInsert.findSolution());
 				
-				Tabu2OptWithAspiration algorithmSwap = new Tabu2OptWithAspiration(graph, 300000, 1000, false, i, 0.1, 50, 2);
+				Tabu2OptWithAspiration algorithmSwap = new Tabu2OptWithAspiration(graph, 300000, 1000, false, 7, 0.1, 50, 2);
 				avgPRDSwap += graph.PRD(algorithmSwap.findSolution());
 				
-				Tabu2OptWithAspiration algorithmInvert = new Tabu2OptWithAspiration(graph, 300000, 1000, false, i, 0.1, 50, 1);
+				Tabu2OptWithAspiration algorithmInvert = new Tabu2OptWithAspiration(graph, 300000, 1000, false, 7, 0.1, 50, 1);
 				avgPRDInvert += graph.PRD(algorithmInvert.findSolution());
 				
 				

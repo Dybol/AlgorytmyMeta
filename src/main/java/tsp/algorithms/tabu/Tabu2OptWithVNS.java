@@ -113,6 +113,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									stagnationCounter = 0;
 								}
 							}
+						} else {
+							Integer[] invertedNewSolution = invert(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
+							}
 						}
 					}
 				}
@@ -152,6 +165,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									bestMove.setFirst(maxSolution);
 									stagnationCounter = 0;
 								}
+							}
+						} else {
+							Integer[] invertedNewSolution = swap(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
 							}
 						}
 					}
@@ -193,6 +219,19 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 									stagnationCounter = 0;
 								}
 							}
+						} else {
+							Integer[] invertedNewSolution = insert(newSolution, i, j);
+
+							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
+								if (timeToSave == 0) {
+									previousMaxSolution = bestMove.getFirst();
+									bestStreak = true;
+								}
+								timeToSave = 1;
+								maxSolution = invertedNewSolution;
+								bestMove.setFirst(maxSolution);
+								resetStagnationCounter();
+							}
 						}
 					}
 				}
@@ -218,7 +257,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 				}
 				if (neighborhoodType < 3) {
 					neighborhoodType++;
-					System.out.println(neighborhoodType + " " + getGraph().pathLength(maxSolution));
+					//System.out.println(neighborhoodType + " " + getGraph().pathLength(maxSolution));
 				} else {
 					neighborhoodType = 1;
 					if (longTermMemory.isEmpty()) {

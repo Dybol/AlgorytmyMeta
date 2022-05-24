@@ -14,10 +14,10 @@ public class NeighborhoodEfficiencyTestsATSP {
 	public void test() throws IOException {
 
 		ATSPMatrixImporter ATSPMatrixImporter = new ATSPMatrixImporter();
-		FileWriter fileWriter = new FileWriter("wyniki_compare_tsp_normal.txt");
+		FileWriter fileWriter = new FileWriter("wyniki_compare_atsp_normal.txt");
 	    PrintWriter printWriter = new PrintWriter(fileWriter);
 	    
-	    for(int i = 20; i <= 200; i++) {
+	    for(int i = 20; i <= 200; i+=10) {
 	    	double avgPRDInsert = 0.0;
 	    	double avgPRDSwap = 0.0;
 	    	double avgPRDInvert = 0.0;
@@ -25,7 +25,7 @@ public class NeighborhoodEfficiencyTestsATSP {
 	    		MatrixGraph graph = new MatrixGraph(ATSPMatrixImporter.generateRandomInstances(i, 2*i - 1));
 	    		ExtendedNearestNeighborAlgorithm startAlg = new ExtendedNearestNeighborAlgorithm(graph);
 				graph.setCurrentPath(startAlg.findSolution());
-				Tabu2OptWithVNS algorithm = new Tabu2OptWithVNS(graph, 300000, 1000, false, i, 0.1, 50, 1);
+				Tabu2OptWithVNS algorithm = new Tabu2OptWithVNS(graph, 300000, 1000, false, i, 0.1, 50, 3);
 				graph.setOptimalPath(algorithm.findSolution());
 				
 				
@@ -47,6 +47,7 @@ public class NeighborhoodEfficiencyTestsATSP {
 	    	
 	    	printWriter.println(i + ";" + avgPRDInvert + ";" + avgPRDSwap + ";" + avgPRDInsert);
 	    	printWriter.flush();
+	    	System.out.println(i);
 	    }
 	    printWriter.close();
 	}
