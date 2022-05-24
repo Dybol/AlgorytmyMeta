@@ -1,14 +1,8 @@
 package tsp.tests.tabu;
 
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.sh0nk.matplotlib4j.Plot;
-
 import tsp.FileImporter;
 import tsp.Graph;
 import tsp.algorithms.basic.Algorithm2Opt;
@@ -20,14 +14,8 @@ import tsp.euc2d.Euc2dImporter;
 import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.tests.Test;
 
 public class TypesComparisonTest {
-	
-	private final List<Integer> keys = new ArrayList<>();
-	private final List<Double> valuesTabu2Opt = new ArrayList<>();
-	private final List<Double> valuesTabu2OptWithVNS = new ArrayList<>();
-	private final List<Double> valuesTabu2OptWithAspiration = new ArrayList<>();
 
 	public void test() throws IOException {
 

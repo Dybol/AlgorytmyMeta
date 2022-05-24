@@ -3,19 +3,8 @@ package tsp.tests.tabu;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.ArrayList;
-
-import tsp.FileImporter;
 import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
-import tsp.algorithms.tabu.Tabu2Opt;
 import tsp.algorithms.tabu.Tabu2OptWithAspiration;
-import tsp.euc2d.Euc2dImporter;
-import tsp.euc2d.model.Euc2d;
-import tsp.euc2d.model.Euc2dGraph;
-import tsp.matrix.LowerDiagRowImporter;
-import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
 

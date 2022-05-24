@@ -69,6 +69,7 @@ public class MatrixImporter extends FileImporter {
 				}
 			}
 		}
+		scanner.close();
 
 		return new Pair<>(allCoordinates, dimension);
 	}

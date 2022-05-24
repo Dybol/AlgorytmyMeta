@@ -1,6 +1,5 @@
 package tsp;
 
-import java.util.ArrayList;
 
 public abstract class Graph {
 
