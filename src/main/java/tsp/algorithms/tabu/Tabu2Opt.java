@@ -23,11 +23,6 @@ public class Tabu2Opt extends TabuAlgorithm {
 
 	private boolean isSCLinear = false;
 
-//	public Tabu2Opt(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Double stagnationMultiplier, Integer stagnationConstant, int neighborhoodType) {
-//		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, stagnationMultiplier, stagnationConstant);
-//		this.neighborhoodType = neighborhoodType;
-//	}
-
 	public Tabu2Opt(Graph graph, Integer maxExecutionTime, Integer maxCounter, Boolean stopOnCounter, Integer tenure, Integer stagnationConstant, Integer neighborhoodType) {
 		super(graph, maxExecutionTime, maxCounter, stopOnCounter, tenure, 0.0, stagnationConstant);
 		this.setStagnationMultiplier(0.0);
@@ -67,6 +62,7 @@ public class Tabu2Opt extends TabuAlgorithm {
 		if (neighborhoodType == 1) {
 			do {
 				if (timeToSave == 0) {
+					System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 					bestMove.setSecond(newMove.getSecond());
 					longTermMemory.push(bestMove);
 				}
@@ -141,6 +137,7 @@ public class Tabu2Opt extends TabuAlgorithm {
 		} else if (neighborhoodType == 2) {
 			do {
 				if (timeToSave == 0) {
+					System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 					bestMove.setSecond(newMove.getSecond());
 					longTermMemory.push(bestMove);
 				}
@@ -216,6 +213,7 @@ public class Tabu2Opt extends TabuAlgorithm {
 		} else if (neighborhoodType == 3) {
 			do {
 				if (timeToSave == 0) {
+					System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 					bestMove.setSecond(newMove.getSecond());
 					longTermMemory.push(bestMove);
 				}

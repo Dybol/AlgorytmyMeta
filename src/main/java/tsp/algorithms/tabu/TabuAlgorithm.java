@@ -78,6 +78,7 @@ public abstract class TabuAlgorithm implements Algorithm {
 		this.graph = graph;
 		counter = 0;
 	}
+	
 
 	public Integer[] insert(Integer[] tab, int from, int to) {
 		Integer[] tabPom = tab.clone();

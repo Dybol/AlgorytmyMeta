@@ -71,6 +71,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 		Integer[] previousMaxSolution = new Integer[newSolution.length];
 		do {
 			if (timeToSave == 0) {
+				System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 				bestMove.setSecond(newMove.getSecond());
 				longTermMemory.push(bestMove);
 			}
@@ -90,6 +91,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -104,6 +106,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -118,6 +121,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
+									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}
@@ -143,6 +147,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -157,6 +162,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -171,6 +177,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
+									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}
@@ -196,6 +203,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -210,6 +218,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
+										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -224,6 +233,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
+									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}

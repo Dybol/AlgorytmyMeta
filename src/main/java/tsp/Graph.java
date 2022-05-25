@@ -24,7 +24,7 @@ public abstract class Graph {
 		} else {
 			sum = -1.0;
 		}
-		return Math.round(sum * 100.0) / 100.0;
+		return Math.round(sum);
 	}
 
 	public boolean isPathCorrect(Integer[] nodes) {
@@ -53,7 +53,6 @@ public abstract class Graph {
 		if (isPathCorrect(path)) {
 			if (optimalPath != null) {
 				double optimal_length = pathLength(optimalPath);
-				//nie jestem pewny tego wzoru!
 				prd = ((pathLength(path) - optimal_length) / optimal_length) * 100.0;
 			} else {
 				System.out.println("Unknown optimal tour!");
