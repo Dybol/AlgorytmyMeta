@@ -1,6 +1,7 @@
 package tsp;
 
 import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.genetic.GeneticAlgorithm;
 import tsp.algorithms.tabu.Tabu2Opt;
 import tsp.algorithms.tabu.Tabu2OptWithAspiration;
 import tsp.algorithms.tabu.Tabu2OptWithVNS;
@@ -11,14 +12,35 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.util.Pair;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class LoadData {
-	public static void main(String[] args) throws IOException {
-		chooseOption();
+	public static void main(String[] args) {
+//		chooseOption();
+		testCrossover();
+	}
+
+	public static void testCrossover() {
+		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10);
+		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
+		for (Pair<Integer[], Integer[]> p : parents) {
+			printSolution(p.getFirst());
+			printSolution(p.getSecond());
+			System.out.println("---------");
+		}
+		List<Integer[]> crossover = geneticAlgorithm.crossover(parents);
+		for (Integer[] c : crossover) {
+			int sum = 0;
+			printSolution(c);
+			for (int x : c) {
+				sum += x;
+			}
+			System.out.println(sum);
+		}
 	}
 
 	private static void chooseOption() throws FileNotFoundException {

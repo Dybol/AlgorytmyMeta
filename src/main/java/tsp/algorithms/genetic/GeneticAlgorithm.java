@@ -47,53 +47,85 @@ public class GeneticAlgorithm {
 	 * @return list of child
 	 */
 	public List<Integer[]> crossover(List<Pair<Integer[], Integer[]>> allParents) {
+		List<Integer[]> listOfChild = new ArrayList<>();
+
 		Random random = new Random();
 		for (Pair<Integer[], Integer[]> pairOfParents : allParents) {
 			Integer[] firstParent = pairOfParents.getFirst();
 			Integer[] secondParent = pairOfParents.getSecond();
 
 			// od 1 do listSize -1
-			int i = random.nextInt(listSize - 1) + 1;
-			int j = random.nextInt(listSize - 1) + 1;
+			int i = random.nextInt(listSize - 2) + 1;
+			int j = random.nextInt(listSize - 2) + 1;
 
 			if (i == j) {
-				i = j - random.nextInt(j - 1) + 1;
+				i = j - (random.nextInt(j - 1) + 1);
 			}
 
 			if (i > j) {
 				int temp = i;
-				j = i;
-				i = temp;
+				i = j;
+				j = temp;
 			}
+
+			System.out.println("i = " + i);
+			System.out.println("j = " + j);
 
 			Integer[] firstChild = new Integer[listSize];
 			Integer[] secondChild = new Integer[listSize];
 
-			for (int x = i + 1; x <= j; x++) {
+			for (int x = i; x <= j; x++) {
 				firstChild[x] = secondParent[x];
 				secondChild[x] = firstParent[x];
 			}
 
-			int helpIndex = i + 1;
+			int helpIndex = i;
 
-			for (int x = 0; x <= i; x++) {
-				if (!doesArrayContainsValue(secondParent, firstChild[x], i, j)) {
+			for (int x = 0; x < listSize; x++) {
+				if (x == i) {
+					x = j + 1;
+				}
+				if (!doesArrayContainsValue(secondParent, firstParent[x], i, j)) {
 					firstChild[x] = firstParent[x];
 				} else {
 					for (int y = helpIndex; y <= j; y++) {
-						//TODO
-						if (doesArrayContainsValue(firstParent, ))
+						if (!doesArrayContainsValue(secondParent, firstParent[y], helpIndex, j) && !doesArrayContainsValue(firstChild, firstParent[y], 0, x - 1)) {
+							firstChild[x] = firstParent[y];
+							helpIndex = y + 1;
+							break;
+						}
 					}
 				}
 			}
+
+			helpIndex = i;
+
+			for (int x = 0; x < listSize; x++) {
+				if (x == i) {
+					x = j + 1;
+				}
+				if (!doesArrayContainsValue(firstParent, secondParent[x], i, j)) {
+					secondChild[x] = secondParent[x];
+				} else {
+					for (int y = helpIndex; y <= j; y++) {
+						if (!doesArrayContainsValue(firstParent, secondParent[y], helpIndex, j) && !doesArrayContainsValue(secondChild, secondParent[y], 0, x - 1)) {
+							secondChild[x] = secondParent[y];
+							helpIndex = y + 1;
+							break;
+						}
+					}
+				}
+			}
+			listOfChild.add(firstChild);
+			listOfChild.add(secondChild);
 		}
+
+		return listOfChild;
 	}
 
-	private int findF
-
 	private boolean doesArrayContainsValue(Integer[] array, int value, int i, int j) {
-		for (int x = i + 1; x <= j; x++) {
-			if (array[x] == value)
+		for (int x = i; x <= j; x++) {
+			if (array[x] != null && array[x] == value)
 				return true;
 		}
 		return false;
