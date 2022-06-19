@@ -20,12 +20,12 @@ import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-		chooseOption();
-//		testCrossover();
+//		chooseOption();
+		testCrossover();
 	}
 
 	public static void testCrossover() {
-		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(10);
+		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
 		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
 		for (Pair<Integer[], Integer[]> p : parents) {
 			printSolution(p.getFirst());

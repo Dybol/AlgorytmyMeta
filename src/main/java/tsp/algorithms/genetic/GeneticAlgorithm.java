@@ -74,6 +74,7 @@ public class GeneticAlgorithm {
 			Integer[] firstChild = new Integer[listSize];
 			Integer[] secondChild = new Integer[listSize];
 
+			//kopiowanie srodkow - dziala
 			for (int x = i; x <= j; x++) {
 				firstChild[x] = secondParent[x];
 				secondChild[x] = firstParent[x];
@@ -81,6 +82,7 @@ public class GeneticAlgorithm {
 
 			int helpIndex = i;
 
+			//dodawanie poczatku i konca
 			for (int x = 0; x < listSize; x++) {
 				if (x == i) {
 					x = j + 1;
@@ -89,7 +91,7 @@ public class GeneticAlgorithm {
 					firstChild[x] = firstParent[x];
 				} else {
 					for (int y = helpIndex; y <= j; y++) {
-						if (!doesArrayContainsValue(secondParent, firstParent[y], helpIndex, j) && !doesArrayContainsValue(firstChild, firstParent[y], 0, x - 1)) {
+						if (!doesArrayContainsValue(secondParent, firstParent[y], i, j) && !doesArrayContainsValue(firstChild, firstParent[y], 0, x - 1)) {
 							firstChild[x] = firstParent[y];
 							helpIndex = y + 1;
 							break;
@@ -108,7 +110,7 @@ public class GeneticAlgorithm {
 					secondChild[x] = secondParent[x];
 				} else {
 					for (int y = helpIndex; y <= j; y++) {
-						if (!doesArrayContainsValue(firstParent, secondParent[y], helpIndex, j) && !doesArrayContainsValue(secondChild, secondParent[y], 0, x - 1)) {
+						if (!doesArrayContainsValue(firstParent, secondParent[y], i, j) && !doesArrayContainsValue(secondChild, secondParent[y], 0, x - 1)) {
 							secondChild[x] = secondParent[y];
 							helpIndex = y + 1;
 							break;
