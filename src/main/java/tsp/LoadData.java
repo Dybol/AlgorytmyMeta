@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LoadData {
-	public static void main(String[] args) {
-//		chooseOption();
-		testCrossover();
+	public static void main(String[] args) throws FileNotFoundException {
+		chooseOption();
+//		testCrossover();
 	}
 
 	public static void testCrossover() {
@@ -91,9 +91,22 @@ public class LoadData {
 			System.out.println("2 - nie");
 			String choose = scanner.nextLine();
 			if (choose.equals("1")) {
-				System.out.println("Podaj sciezke do optymalnego rozwiazania");
-				String pathToTour = scanner.nextLine();
-				fileImporter.importOptimalTour(pathToTour);
+
+				System.out.println("Chcesz wprowadzic optymalna dlugosc recznie, czy korzystajac z pliku?");
+				System.out.println("1 - recznie");
+				System.out.println("2 - z pliku");
+				String optPathLengthChoose = scanner.nextLine();
+
+				if (optPathLengthChoose.equals("1")) {
+					System.out.println("Podaj optymalna dlugosc");
+					String optPathLength = scanner.nextLine();
+					fileImporter.getGraph().setOptimalPathLength(Double.parseDouble(optPathLength));
+				} else if (optPathLengthChoose.equals("2")) {
+					System.out.println("Podaj sciezke do optymalnego rozwiazania");
+					String pathToTour = scanner.nextLine();
+					fileImporter.importOptimalTour(pathToTour);
+				}
+
 			}
 
 		} else if (num.equals("2")) {
@@ -193,7 +206,7 @@ public class LoadData {
 		if (fileImporter.getGraph().getOptimalPath() != null) {
 			System.out.println("\nOptymalna sciezka : ");
 			printSolution(fileImporter.getGraph().getOptimalPath());
-			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().getOptimalPathLength());
 			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		}
 		scanner.close();
