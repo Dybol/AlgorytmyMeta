@@ -40,6 +40,14 @@ public class GeneticAlgorithm implements Algorithm {
 		do {
 			List<Pair<Integer[], Integer[]>> parents = generateParents();
 			List<Integer[]> children = crossover(parents);
+			// TODO
+			// Mutacja - wykonywanie ruchów swap/insert/invert z zadanym ppb.
+			// Algorytm memetyczny - zapuszczamy np. 2Opt na każdym zmutowanym osobniku
+			// Selekcja (kto przeżywa), możliwe proste implementacje:
+			// *pojedynki w parach, przeżywa lepszy z pary
+			// *elitaryzm - sortujemy rozwiązania rosnąco w liście względem ich wartości funkcji celu, wybieramy z 5-10% najlepszych
+			// i odrzuczamy analogiczną liczbę najgorszych; reszta staje do pojedynków w parach
+			// *brutalne odcięcie najgorszej połowy
 		}
 		while(!stopCriterion(System.currentTimeMillis()));
 		return population.get(0);
