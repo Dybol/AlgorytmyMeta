@@ -1,5 +1,7 @@
 package tsp.algorithms.genetic;
 
+import tsp.Graph;
+import tsp.algorithms.Algorithm;
 import tsp.util.Pair;
 
 import java.util.ArrayList;
@@ -7,18 +9,40 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class GeneticAlgorithm {
-
+public class GeneticAlgorithm implements Algorithm {
+	
+	private final Graph graph;
+	private int generationNo = 0;
+	private Integer maxExecutionTime = 10 * 1_000;
+	private Integer maxGenerationNo = 100000;
+	private Boolean stopOnTime = true;
+	private long timeWhenStarted;
+	
 	private List<Integer> listToShuffle;
-
+	
 	private List<Integer[]> population;
 
 	private Integer listSize;
 
-	public GeneticAlgorithm(int n) {
-		listSize = n;
-		listToShuffle = initList(n);
+	public GeneticAlgorithm(Graph graph, int populationSize, int maxExecutionTime, int maxGenerationNo, boolean stopOnTime) {
+		this.graph = graph;
+		listSize = populationSize;
+		this.maxExecutionTime = maxExecutionTime;
+		this.maxGenerationNo = maxGenerationNo;
+		this.stopOnTime = stopOnTime;
+		timeWhenStarted = System.currentTimeMillis();
+	}
+	
+	@Override
+	public Integer[] findSolution() {
+		listToShuffle = initList(listSize);
 		population = generate();
+		do {
+			List<Pair<Integer[], Integer[]>> parents = generateParents();
+			List<Integer[]> children = crossover(parents);
+		}
+		while(!stopCriterion(System.currentTimeMillis()));
+		return population.get(0);
 	}
 
 
@@ -152,4 +176,23 @@ public class GeneticAlgorithm {
 
 		return tab;
 	}
+	
+	boolean stopCriterion(long currentTime) {
+		if(stopOnTime) {
+			if(currentTime - timeWhenStarted >= maxExecutionTime)
+				return true;
+			else
+				return false;
+		}
+		else {
+			if(generationNo >= maxGenerationNo)
+				return true;
+			else
+				return false;
+			
+		}
+	}
+
+
+	
 }

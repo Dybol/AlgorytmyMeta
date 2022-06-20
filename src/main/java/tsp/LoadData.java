@@ -21,27 +21,29 @@ import java.util.Scanner;
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
 //		chooseOption();
-		testCrossover();
+		
 	}
 
-	public static void testCrossover() {
-		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
-		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
-		for (Pair<Integer[], Integer[]> p : parents) {
-			printSolution(p.getFirst());
-			printSolution(p.getSecond());
-			System.out.println("---------");
-		}
-		List<Integer[]> crossover = geneticAlgorithm.crossover(parents);
-		for (Integer[] c : crossover) {
-			int sum = 0;
-			printSolution(c);
-			for (int x : c) {
-				sum += x;
-			}
-			System.out.println(sum);
-		}
-	}
+	
+//	public static void testCrossover() {
+//		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
+//		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
+//		for (Pair<Integer[], Integer[]> p : parents) {
+//			printSolution(p.getFirst());
+//			printSolution(p.getSecond());
+//			System.out.println("---------");
+//		}
+//		List<Integer[]> crossover = geneticAlgorithm.crossover(parents);
+//		for (Integer[] c : crossover) {
+//			int sum = 0;
+//			printSolution(c);
+//			for (int x : c) {
+//				sum += x;
+//			}
+//			System.out.println(sum);
+//		}
+//	}
+	
 
 	private static void chooseOption() throws FileNotFoundException {
 		Scanner scanner = new Scanner(System.in);
