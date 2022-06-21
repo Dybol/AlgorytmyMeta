@@ -82,11 +82,12 @@ public class GeneticAlgorithm implements Algorithm {
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
 			if(bestSolutionWithValue.getSecond() < smallestValue) {
 				bestSolution = bestSolutionWithValue.getFirst();
-				smallestValue = bestSolutionWithValue.getSecond();
+				smallestValue = graph.pathLength(bestSolution);
 				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
-				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + averageValueOfPopulation + " (avg)\t");
+				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
 				
 			}
+			
 			
 
 			population = getSurvivors(survivorsWithValues);

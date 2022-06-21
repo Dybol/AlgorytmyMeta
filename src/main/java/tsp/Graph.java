@@ -61,7 +61,7 @@ public abstract class Graph {
 		} else {
 			System.out.println("Incorrect path!");
 		}
-		return prd;
+		return Math.round(prd * 100.0)/100.0;
 	}
 
 	public void printCurrentPath() {
