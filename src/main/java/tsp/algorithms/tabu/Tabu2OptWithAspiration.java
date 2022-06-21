@@ -38,7 +38,7 @@ public class Tabu2OptWithAspiration extends TabuAlgorithm {
 	@Override
 	public Integer[] findSolution() {
 		long now = System.currentTimeMillis();
-
+		setCounter(0);
 		Integer[] curSolution;
 		Integer[] newSolution = getGraph().getCurrentPath();
 		Integer[] maxSolution = getGraph().getCurrentPath();

@@ -2,6 +2,7 @@ package tsp.algorithms.genetic;
 
 import tsp.Graph;
 import tsp.algorithms.Algorithm;
+import tsp.algorithms.tabu.Tabu2Opt;
 import tsp.algorithms.tabu.Tabu2OptWithVNS;
 import tsp.util.Pair;
 
@@ -14,7 +15,7 @@ import java.util.Random;
 
 public class GeneticAlgorithm implements Algorithm {
 	
-	private Tabu2OptWithVNS memeticAlgorithm;
+	private Tabu2Opt memeticAlgorithm;
 	private final Graph graph;
 	private int generationNo = 0;
 	private Integer maxExecutionTime;
@@ -32,8 +33,7 @@ public class GeneticAlgorithm implements Algorithm {
 
 	public GeneticAlgorithm(Graph graph, int populationSize, double probabilityOfMutation, int maxExecutionTime, int maxGenerationNo, boolean stopOnTime) {
 		this.graph = graph;
-		//Nie chce się zatrzymać po  5 iteracjach!!!!
-		memeticAlgorithm = new Tabu2OptWithVNS(graph, maxExecutionTime/(100*populationSize), 5, true, 7, 100);
+		memeticAlgorithm = new Tabu2Opt(graph, maxExecutionTime/(100*populationSize), 1, true, 7, 100, 1);
 		this.problemSize = graph.getNodesCount();
 		this.populationSize = populationSize;
 		this.probabilityOfMutation = probabilityOfMutation;
@@ -54,27 +54,28 @@ public class GeneticAlgorithm implements Algorithm {
 			Instant start = Instant.now();
 			List<Pair<Integer[], Integer[]>> parents = generateParents();
 			Instant end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
 			List<Integer[]> children = crossover(parents);
 			end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
 			population.addAll(children);
 			end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
 			List<Integer[]> mutatedPopulation = mutate(population);
 			end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
-			List<Integer[]> memedPopulation = memeticAlgorithm(mutatedPopulation);
+//			List<Integer[]> memedPopulation = memeticAlgorithm(mutatedPopulation);
+			
 			end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
-			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(memedPopulation);
+			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(mutatedPopulation);
 			end = Instant.now();
-			System.out.println(Duration.between(start, end).toMillis());
+			//System.out.println(Duration.between(start, end).toMillis());
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
 			if(bestSolutionWithValue.getSecond() < smallestValue) {
 				bestSolution = bestSolutionWithValue.getFirst();
@@ -219,7 +220,7 @@ public class GeneticAlgorithm implements Algorithm {
 	}
 	
 	public List<Integer[]> memeticAlgorithm(List<Integer[]> list) {
-		memeticAlgorithm = new Tabu2OptWithVNS(graph, maxExecutionTime/(100*populationSize), 5, true, 7, 100);
+		memeticAlgorithm = new Tabu2Opt(graph, maxExecutionTime/(100*populationSize), 1, true, 7, 100, 1);
 		List<Integer[]> improvedList = new ArrayList<>();
 		for (Integer[] solution : list) {
 			graph.setCurrentPath(solution);

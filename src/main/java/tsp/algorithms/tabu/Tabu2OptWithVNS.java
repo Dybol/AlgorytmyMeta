@@ -54,7 +54,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 	public Integer[] findSolution() {
 		// get current time
 		long now = System.currentTimeMillis();
-
+		setCounter(0);
 		Integer[] curSolution;
 		Integer[] newSolution = getGraph().getCurrentPath();
 		Integer[] maxSolution = getGraph().getCurrentPath();
@@ -279,6 +279,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 					addOnTabuList(newMove.getSecond());
 				}
 			}
+			System.out.println(getCounter());
 		}
 		while (!stopCriterion(now));
 
