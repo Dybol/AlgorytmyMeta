@@ -81,13 +81,15 @@ public class GeneticAlgorithm implements Algorithm {
 			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(memedPopulation);
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
 			if(bestSolutionWithValue.getSecond() < smallestValue) {
-				bestSolution = bestSolutionWithValue.getFirst();
+				bestSolution = bestSolutionWithValue.getFirst().clone();
 				smallestValue = graph.pathLength(bestSolution);
-				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
-				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
 				
 			}
+			double averageValueOfPopulation = getAverageValue(survivorsWithValues);
+			System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
 			
+			
+//			System.out.println(generationNo);
 			
 
 			population = getSurvivors(survivorsWithValues);
