@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class GeneticAlgorithm implements Algorithm {
 	
-	private Tabu2Opt memeticAlgorithm;
+	private SingleIteration2Opt memeticAlgorithm;
 	private final Graph graph;
 	private int generationNo = 0;
 	private Integer maxExecutionTime;
@@ -33,7 +33,7 @@ public class GeneticAlgorithm implements Algorithm {
 
 	public GeneticAlgorithm(Graph graph, int populationSize, double probabilityOfMutation, int maxExecutionTime, int maxGenerationNo, boolean stopOnTime) {
 		this.graph = graph;
-		memeticAlgorithm = new Tabu2Opt(graph, maxExecutionTime/(100*populationSize), 1, true, 7, 100, 1);
+		memeticAlgorithm = new SingleIteration2Opt(graph, 2);
 		this.problemSize = graph.getNodesCount();
 		this.populationSize = populationSize;
 		this.probabilityOfMutation = probabilityOfMutation;
@@ -45,6 +45,7 @@ public class GeneticAlgorithm implements Algorithm {
 	
 	@Override
 	public Integer[] findSolution() {
+		generationNo = 0;
 		listToShuffle = initList(problemSize);
 		population = generate();
 		Integer[] bestSolution = population.get(0);
@@ -68,20 +69,24 @@ public class GeneticAlgorithm implements Algorithm {
 			end = Instant.now();
 			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
-//			List<Integer[]> memedPopulation = memeticAlgorithm(mutatedPopulation);
+			List<Integer[]> memedPopulation = memeticAlgorithm(mutatedPopulation);
 			
 			end = Instant.now();
 			//System.out.println(Duration.between(start, end).toMillis());
 			start = Instant.now();
-			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(mutatedPopulation);
+			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(memedPopulation);
 			end = Instant.now();
 			//System.out.println(Duration.between(start, end).toMillis());
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
 			if(bestSolutionWithValue.getSecond() < smallestValue) {
 				bestSolution = bestSolutionWithValue.getFirst();
 				smallestValue = bestSolutionWithValue.getSecond();
-				System.out.println(generationNo + "|" + smallestValue);
+				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
+				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + averageValueOfPopulation + " (avg)\t");
+
+				
 			}
+			
 			population = getSurvivors(survivorsWithValues);
 			// TODO
 			// Mutacja - wykonywanie ruchów swap/insert/invert z zadanym ppb.
@@ -220,7 +225,6 @@ public class GeneticAlgorithm implements Algorithm {
 	}
 	
 	public List<Integer[]> memeticAlgorithm(List<Integer[]> list) {
-		memeticAlgorithm = new Tabu2Opt(graph, maxExecutionTime/(100*populationSize), 1, true, 7, 100, 1);
 		List<Integer[]> improvedList = new ArrayList<>();
 		for (Integer[] solution : list) {
 			graph.setCurrentPath(solution);
@@ -253,6 +257,14 @@ public class GeneticAlgorithm implements Algorithm {
 			}
 		}
 		return theBestOne;
+	}
+	
+	public double getAverageValue(List<Pair<Integer[], Double>> list) {
+		double avg = 0.0;
+		for (Pair<Integer[], Double> solutionWithValue : list) {
+			avg += solutionWithValue.getSecond();
+		}
+		return avg / list.size();
 	}
 	
 	public List<Integer[]> getSurvivors(List<Pair<Integer[], Double>> list) {
