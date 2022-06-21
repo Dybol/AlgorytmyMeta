@@ -19,17 +19,33 @@ public class SingleIteration2Opt implements Algorithm {
 		@Override
 		public Integer[] findSolution() {
 			Integer[] curSolution = graph.getCurrentPath();
+			Integer[] newSolution = graph.getCurrentPath();
 			Integer[] maxSolution = graph.getCurrentPath();
 			double bestValue = graph.pathLength(maxSolution);
 			double curValue = graph.pathLength(curSolution);
 			if (neighborhoodType == 1) {
 				for (int i = 0; i < curSolution.length; i++) {
+					double newValue = curValue;
+					newSolution = curSolution;
 					for (int j = i + 1; j < curSolution.length; j++) {
-						Integer[] invertedNewSolution = invert(curSolution, i, j);
-						if (graph.pathLength(invertedNewSolution) < bestValue) {
-							maxSolution = invertedNewSolution;
-							bestValue = graph.pathLength(maxSolution);
+						newValue = newValue - graph.calculateDistance(newSolution[j], newSolution[j-1])
+								+ graph.calculateDistance(newSolution[j], newSolution[i]);
+						if (i > 0) {
+							newValue -= graph.calculateDistance(newSolution[i-1], newSolution[i]);
+							newValue += graph.calculateDistance(newSolution[i-1], newSolution[j]);
 						}
+						if (j + 1 < curSolution.length) {
+							newValue -= graph.calculateDistance(newSolution[j], newSolution[j+1]);
+							newValue += graph.calculateDistance(newSolution[j-1], newSolution[j+1]);
+						}
+						Integer[] invertedNewSolution = invert(curSolution, i, j);
+						if (newValue < bestValue) {
+							
+							maxSolution = invertedNewSolution;
+							bestValue = newValue;
+							
+						}
+						newSolution = invertedNewSolution;
 					}
 				}
 			}

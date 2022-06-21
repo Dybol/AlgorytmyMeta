@@ -33,7 +33,7 @@ public class GeneticAlgorithm implements Algorithm {
 
 	public GeneticAlgorithm(Graph graph, int populationSize, double probabilityOfMutation, int maxExecutionTime, int maxGenerationNo, boolean stopOnTime) {
 		this.graph = graph;
-		memeticAlgorithm = new SingleIteration2Opt(graph, 2);
+		memeticAlgorithm = new SingleIteration2Opt(graph, 1);
 		this.problemSize = graph.getNodesCount();
 		this.populationSize = populationSize;
 		this.probabilityOfMutation = probabilityOfMutation;
