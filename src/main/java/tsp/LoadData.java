@@ -8,15 +8,16 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.tests.genetics.ProbabilityOfMutationTest;
 
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-//		chooseOption();
-		new ProbabilityOfMutationTest().test();
+		chooseOption();
+//		new ProbabilityOfMutationTest().test();
+//		new ProbabilityOfCrossoverTest().test();
+//		new ManualTest().test();
 //		testGenetic();
 
 	}
@@ -195,9 +196,11 @@ public class LoadData {
 
 		double pathLength = fileImporter.getGraph().pathLength(sol);
 		System.out.println("Dlugosc sciezki: " + pathLength);
-		if (fileImporter.getGraph().getOptimalPath() != null) {
-			System.out.println("\nOptymalna sciezka : ");
-			printSolution(fileImporter.getGraph().getOptimalPath());
+		if (fileImporter.getGraph().getOptimalPathLength() != null) {
+			if (fileImporter.getGraph().getOptimalPath() != null) {
+				System.out.println("\nOptymalna sciezka: ");
+				printSolution(fileImporter.getGraph().getOptimalPath());
+			}
 			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().getOptimalPathLength());
 			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		}
