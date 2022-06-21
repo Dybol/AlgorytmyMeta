@@ -47,10 +47,10 @@ public class LoadData {
 	
 	public static void testGenetic() throws FileNotFoundException {
 		Euc2dImporter eucImporter = new Euc2dImporter();
-		eucImporter.importGraph("instances/ch130.tsp");
-		eucImporter.importOptimalTour("instances/ch130.opt.tour");
+		eucImporter.importGraph("instances/berlin52.tsp");
+		eucImporter.importOptimalTour("instances/berlin52.opt.tour");
 		Graph graph1 = eucImporter.getGraph();
-		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.10, 1000*300, 100, true);
+		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.20, 1.0, 1, 1, 1, 1000*300, 100, true);
 		alg.findSolution();
 	}
 	
