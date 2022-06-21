@@ -21,6 +21,7 @@ import java.util.Scanner;
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
 //		chooseOption();
+		testGenetic();
 		
 	}
 
@@ -43,6 +44,15 @@ public class LoadData {
 //			System.out.println(sum);
 //		}
 //	}
+	
+	public static void testGenetic() throws FileNotFoundException {
+		Euc2dImporter eucImporter = new Euc2dImporter();
+		eucImporter.importGraph("instances/ch130.tsp");
+		eucImporter.importOptimalTour("instances/ch130.opt.tour");
+		Graph graph1 = eucImporter.getGraph();
+		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 100, 0.01, 1000*300, 100, true);
+		alg.findSolution();
+	}
 	
 
 	private static void chooseOption() throws FileNotFoundException {
