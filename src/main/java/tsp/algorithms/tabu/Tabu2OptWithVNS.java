@@ -54,7 +54,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 	public Integer[] findSolution() {
 		// get current time
 		long now = System.currentTimeMillis();
-
+		setCounter(0);
 		Integer[] curSolution;
 		Integer[] newSolution = getGraph().getCurrentPath();
 		Integer[] maxSolution = getGraph().getCurrentPath();
@@ -71,7 +71,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 		Integer[] previousMaxSolution = new Integer[newSolution.length];
 		do {
 			if (timeToSave == 0) {
-				System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+				//System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 				bestMove.setSecond(newMove.getSecond());
 				longTermMemory.push(bestMove);
 			}
@@ -91,7 +91,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -106,7 +106,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -121,7 +121,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
-									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}
@@ -147,7 +147,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -162,7 +162,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -177,7 +177,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
-									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}
@@ -203,7 +203,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 								noMovesFoundYet = false;
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -218,7 +218,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 								if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 									if (timeToSave == 0) {
-										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//										System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 										previousMaxSolution = bestMove.getFirst();
 										bestStreak = true;
 									}
@@ -233,7 +233,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 
 							if (getGraph().pathLength(invertedNewSolution) < getGraph().pathLength(maxSolution)) {
 								if (timeToSave == 0) {
-									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
+//									System.out.println((getCounter() - 1) + "	" + getGraph().pathLength(maxSolution) + "	 " + getGraph().PRD(maxSolution));
 									previousMaxSolution = bestMove.getFirst();
 									bestStreak = true;
 								}
@@ -279,6 +279,7 @@ public class Tabu2OptWithVNS extends TabuAlgorithm {
 					addOnTabuList(newMove.getSecond());
 				}
 			}
+			System.out.println(getCounter());
 		}
 		while (!stopCriterion(now));
 

@@ -1,6 +1,7 @@
 package tsp;
 
 import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
+import tsp.algorithms.genetic.GeneticAlgorithm;
 import tsp.algorithms.tabu.Tabu2Opt;
 import tsp.algorithms.tabu.Tabu2OptWithAspiration;
 import tsp.algorithms.tabu.Tabu2OptWithVNS;
@@ -11,15 +12,49 @@ import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
+import tsp.util.Pair;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class LoadData {
-	public static void main(String[] args) throws IOException {
-		chooseOption();
+	public static void main(String[] args) throws FileNotFoundException {
+//		chooseOption();
+		testGenetic();
+		
 	}
+
+	
+//	public static void testCrossover() {
+//		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
+//		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
+//		for (Pair<Integer[], Integer[]> p : parents) {
+//			printSolution(p.getFirst());
+//			printSolution(p.getSecond());
+//			System.out.println("---------");
+//		}
+//		List<Integer[]> crossover = geneticAlgorithm.crossover(parents);
+//		for (Integer[] c : crossover) {
+//			int sum = 0;
+//			printSolution(c);
+//			for (int x : c) {
+//				sum += x;
+//			}
+//			System.out.println(sum);
+//		}
+//	}
+	
+	public static void testGenetic() throws FileNotFoundException {
+		FileImporter lowerDiagImporter = new Euc2dImporter();
+		lowerDiagImporter.importGraph("instances/eil101.tsp");
+//		lowerDiagImporter.importOptimalTour("instances/gr120.opt.tour");
+		Graph graph1 = lowerDiagImporter.getGraph();
+		graph1.setOptimalPathLength(629.0);
+		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.20, 1.0, 1, 2, 1, 1000*300, 100, true);
+		alg.findSolution();
+	}
+	
 
 	private static void chooseOption() throws FileNotFoundException {
 		Scanner scanner = new Scanner(System.in);
@@ -69,9 +104,22 @@ public class LoadData {
 			System.out.println("2 - nie");
 			String choose = scanner.nextLine();
 			if (choose.equals("1")) {
-				System.out.println("Podaj sciezke do optymalnego rozwiazania");
-				String pathToTour = scanner.nextLine();
-				fileImporter.importOptimalTour(pathToTour);
+
+				System.out.println("Chcesz wprowadzic optymalna dlugosc recznie, czy korzystajac z pliku?");
+				System.out.println("1 - recznie");
+				System.out.println("2 - z pliku");
+				String optPathLengthChoose = scanner.nextLine();
+
+				if (optPathLengthChoose.equals("1")) {
+					System.out.println("Podaj optymalna dlugosc");
+					String optPathLength = scanner.nextLine();
+					fileImporter.getGraph().setOptimalPathLength(Double.parseDouble(optPathLength));
+				} else if (optPathLengthChoose.equals("2")) {
+					System.out.println("Podaj sciezke do optymalnego rozwiazania");
+					String pathToTour = scanner.nextLine();
+					fileImporter.importOptimalTour(pathToTour);
+				}
+
 			}
 
 		} else if (num.equals("2")) {
@@ -171,7 +219,7 @@ public class LoadData {
 		if (fileImporter.getGraph().getOptimalPath() != null) {
 			System.out.println("\nOptymalna sciezka : ");
 			printSolution(fileImporter.getGraph().getOptimalPath());
-			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().pathLength(fileImporter.getGraph().getOptimalPath()));
+			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().getOptimalPathLength());
 			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		}
 		scanner.close();

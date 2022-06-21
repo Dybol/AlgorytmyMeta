@@ -8,6 +8,8 @@ public abstract class Graph {
 	private Integer[] optimalPath = null;
 	private Integer[] currentPath = null;
 
+	private Double optimalPathLength = null;
+
 	public Graph(int size) {
 		this.size = size;
 	}
@@ -51,16 +53,15 @@ public abstract class Graph {
 	public double PRD(Integer[] path) {
 		double prd = -1.0;
 		if (isPathCorrect(path)) {
-			if (optimalPath != null) {
-				double optimal_length = pathLength(optimalPath);
-				prd = ((pathLength(path) - optimal_length) / optimal_length) * 100.0;
+			if (optimalPathLength != null) {
+				prd = ((pathLength(path) - optimalPathLength) / optimalPathLength) * 100.0;
 			} else {
 				System.out.println("Unknown optimal tour!");
 			}
 		} else {
 			System.out.println("Incorrect path!");
 		}
-		return prd;
+		return Math.round(prd * 100.0)/100.0;
 	}
 
 	public void printCurrentPath() {
@@ -98,9 +99,18 @@ public abstract class Graph {
 	}
 
 	public void setOptimalPath(Integer[] nodes) {
-		if (isPathCorrect(nodes))
+		if (isPathCorrect(nodes)) {
 			this.optimalPath = nodes;
-		else
+			setOptimalPathLength(pathLength(nodes));
+		} else
 			System.out.println("Incorrect path!");
+	}
+
+	public void setOptimalPathLength(Double optimalPathLength) {
+		this.optimalPathLength = optimalPathLength;
+	}
+
+	public Double getOptimalPathLength() {
+		return optimalPathLength;
 	}
 }
