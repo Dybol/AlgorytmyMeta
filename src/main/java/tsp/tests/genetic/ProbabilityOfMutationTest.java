@@ -1,4 +1,4 @@
-package tsp.tests.genetics;
+package tsp.tests.genetic;
 
 import com.github.sh0nk.matplotlib4j.Plot;
 import tsp.FileImporter;
@@ -38,27 +38,29 @@ public class ProbabilityOfMutationTest implements Test {
 		List<Double> valuesOpt = new ArrayList<>();
 		double opt = graph.pathLength(graph.getOptimalPath());
 
-		for (double i = 0.05; i <= 1; i += 0.05) {
+		for (double i = 1.0; i <= 10; i += 1) {
 			double avgPathLengthSwap = 0;
 			double avgPathLengthInvert = 0;
 			double avgPathLengthInsert = 0;
-			for (int j = 0; j < 10; j++) {
+			for (int j = 0; j < 5; j++) {
 				GeneticAlgorithm geneticAlgorithmMutationSwap = new GeneticAlgorithm(graph, 50, i, 1,
-						1, 2, 1, 10000, null, true);
+						2, 2, 1, 5000, null, true);
 				//same as type of neighborhood for memetics
-				GeneticAlgorithm geneticAlgorithmMutationInvert = new GeneticAlgorithm(graph, 50, i, 1,
-						1, 1, 1, 10000, null, true);
-				GeneticAlgorithm geneticAlgorithmMutationInsert = new GeneticAlgorithm(graph, 50, i, 1,
-						1, 3, 1, 10000, null, true);
 				avgPathLengthSwap += graph.pathLength(geneticAlgorithmMutationSwap.findSolution());
+
+				GeneticAlgorithm geneticAlgorithmMutationInvert = new GeneticAlgorithm(graph, 50, i, 1,
+						2, 1, 1, 5000, null, true);
 				avgPathLengthInvert += graph.pathLength(geneticAlgorithmMutationInvert.findSolution());
+
+				GeneticAlgorithm geneticAlgorithmMutationInsert = new GeneticAlgorithm(graph, 50, i, 1,
+						2, 3, 1, 5000, null, true);
 				avgPathLengthInsert += graph.pathLength(geneticAlgorithmMutationInsert.findSolution());
 			}
 
 			keys.add(i);
-			valuesGeneticsMutationSwap.add(avgPathLengthSwap / 15);
-			valuesGeneticsMutationInvert.add(avgPathLengthInvert / 15);
-			valuesGeneticsMutationInsert.add(avgPathLengthInsert / 15);
+			valuesGeneticsMutationSwap.add(avgPathLengthSwap / 5);
+			valuesGeneticsMutationInvert.add(avgPathLengthInvert / 5);
+			valuesGeneticsMutationInsert.add(avgPathLengthInsert / 5);
 			System.out.println("End dla i = " + i);
 			valuesOpt.add(opt);
 		}
@@ -73,7 +75,7 @@ public class ProbabilityOfMutationTest implements Test {
 		plot.plot().add(keys, valuesGeneticsMutationSwap).label("mutation swap");
 		plot.plot().add(keys, valuesGeneticsMutationInvert).label("mutation invert");
 		plot.plot().add(keys, valuesGeneticsMutationInsert).label("mutation insert");
-		plot.plot().add(keys, valuesOpt);
+		plot.plot().add(keys, valuesOpt).label("optimum");
 		plot.title("different mutation probabilities");
 		plot.xlabel("probability of mutation").build();
 		plot.ylabel("best path length");

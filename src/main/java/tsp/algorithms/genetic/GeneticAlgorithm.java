@@ -77,7 +77,7 @@ public class GeneticAlgorithm implements Algorithm {
 			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(memedPopulation);
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
 			if (bestSolutionWithValue.getSecond() < smallestValue) {
-				bestSolution = bestSolutionWithValue.getFirst();
+				bestSolution = bestSolutionWithValue.getFirst().clone();
 				smallestValue = graph.pathLength(bestSolution);
 				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
 				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
@@ -301,7 +301,18 @@ public class GeneticAlgorithm implements Algorithm {
 	}
 
 	public List<Integer[]> mutate(List<Integer[]> list) {
+		//rozmiar problemu
+		//graf ma np. 101 wierzcholkow -> rozmiar dla eil101 to 101;P
+
+//		System.out.println("Prawd mutacji: " + probabilityOfMutation);
+//		System.out.println("Rozmiaar problemu: " + problemSize);
+
 		double elementaryProbability = probabilityOfMutation / ((problemSize * (problemSize - 1)) / 2);
+//
+//		System.out.println("Elementarne: " + elementaryProbability);
+//
+//		System.out.println("Prev list: " + list);
+
 		Random random = new Random();
 		for (Integer[] solution : list) {
 			for (int i = 0; i < problemSize; i++) {
@@ -322,10 +333,15 @@ public class GeneticAlgorithm implements Algorithm {
 						else {
 							solution = insert(solution, i, j);
 						}
+
+//						System.out.println("zaszla mutacja");
 					}
 				}
 			}
 		}
+
+//		System.out.println("2nd list " + list);
+
 		return list;
 	}
 
