@@ -2,30 +2,27 @@ package tsp;
 
 import tsp.algorithms.basic.ExtendedNearestNeighborAlgorithm;
 import tsp.algorithms.genetic.GeneticAlgorithm;
-import tsp.algorithms.tabu.Tabu2Opt;
-import tsp.algorithms.tabu.Tabu2OptWithAspiration;
-import tsp.algorithms.tabu.Tabu2OptWithVNS;
-import tsp.algorithms.tabu.TabuAlgorithm;
 import tsp.euc2d.Euc2dImporter;
 import tsp.euc2d.model.Euc2dGraph;
 import tsp.matrix.LowerDiagRowImporter;
 import tsp.matrix.atsp.ATSPMatrixImporter;
 import tsp.matrix.model.MatrixGraph;
 import tsp.matrix.tsp.TSPMatrixImporter;
-import tsp.util.Pair;
 
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Scanner;
 
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
-//		chooseOption();
-		testGenetic();
-		
+		chooseOption();
+//		new ProbabilityOfMutationTest().test();
+//		new ProbabilityOfCrossoverTest().test();
+//		new ManualTest().test();
+//		testGenetic();
+
 	}
 
-	
+
 //	public static void testCrossover() {
 //		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
 //		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
@@ -44,17 +41,17 @@ public class LoadData {
 //			System.out.println(sum);
 //		}
 //	}
-	
+
 	public static void testGenetic() throws FileNotFoundException {
 		FileImporter lowerDiagImporter = new Euc2dImporter();
 		lowerDiagImporter.importGraph("instances/eil101.tsp");
 //		lowerDiagImporter.importOptimalTour("instances/gr120.opt.tour");
 		Graph graph1 = lowerDiagImporter.getGraph();
 		graph1.setOptimalPathLength(629.0);
-		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.20, 1.0, 1, 2, 1, 1000*300, 100, true);
+		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.20, 1.0, 1, 2, 1, 1000 * 300, 100, true);
 		alg.findSolution();
 	}
-	
+
 
 	private static void chooseOption() throws FileNotFoundException {
 		Scanner scanner = new Scanner(System.in);
@@ -142,14 +139,7 @@ public class LoadData {
 			return;
 		}
 
-		System.out.println("Wybierz algorytm");
-		System.out.println("1 - tabu 2opt");
-		System.out.println("2 - tabu 2opt with Aspiration");
-		System.out.println("3 - tabu 2opt with VNS");
-
-		TabuAlgorithm algorithm;
-
-		String alg = scanner.nextLine();
+		GeneticAlgorithm algorithm;
 
 		System.out.println("Co ma byc kryterium stopu?");
 		System.out.println("1 - ilosc iteracji");
@@ -167,46 +157,36 @@ public class LoadData {
 			millis = scanner.nextLine();
 		}
 
-		System.out.println("Podaj dlugosc listy tabu");
-		String tenure = scanner.nextLine();
+		System.out.println("Podaj wielkosc populacji");
+		String populationSize = scanner.nextLine();
 
-		System.out.println("Podaj maksymalna ilosc iteracji dla stagnacji");
-		String maxStagnationCounter = scanner.nextLine();
+		System.out.println("Podaj prawdopodobienstwo mutacji");
+		String probabilityOfMutation = scanner.nextLine();
+
+		System.out.println("Podaj prawdopodobienstwo krzyzowania");
+		String probabilityOfCrossover = scanner.nextLine();
 
 		Integer maxIterations = iterations == null ? null : Integer.parseInt(iterations);
 		Integer maxMillis = millis == null ? null : Integer.parseInt(millis);
 
-		String neighbourhoodType = "1";
+		System.out.println("Podaj typ sasiedzctwa uzyty w algorytmie memetycznym:");
+		System.out.println("1 - invert");
+		System.out.println("2 - swap");
+		System.out.println("3 - insert");
 
-		System.out.println("Podaj czynnik, przez ktory chcesz pomnozyc (domyslnie 0)");
+		String neighbourhoodTypeInMemetic = scanner.nextLine();
 
-		String factor = scanner.nextLine();
+		System.out.println("Podaj typ operatora mutacji:");
+		System.out.println("1 - invert");
+		System.out.println("2 - swap");
+		System.out.println("3 - insert");
+		String typeOfMutationOperator = scanner.nextLine();
 
-		if (alg.equals("1") || alg.equals("2")) {
-			// 1 - invert
-			// 2 - swap
-			// 3 - insert
-			System.out.println("Podaj typ sasiedzctwa:");
-			System.out.println("1 - invert");
-			System.out.println("2 - swap");
-			System.out.println("3 - insert");
-			neighbourhoodType = scanner.nextLine();
-		}
-
+		algorithm = new GeneticAlgorithm(fileImporter.getGraph(), Integer.parseInt(populationSize), Double.parseDouble(probabilityOfMutation),
+				Double.parseDouble(probabilityOfCrossover), Integer.parseInt(neighbourhoodTypeInMemetic),
+				Integer.parseInt(typeOfMutationOperator), 1, maxMillis, maxIterations, stop.equals("2"));
 
 		fileImporter.getGraph().setCurrentPath(new ExtendedNearestNeighborAlgorithm(fileImporter.getGraph()).findSolution());
-
-		switch (alg) {
-			case "1" -> algorithm = new Tabu2Opt(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter), Integer.parseInt(neighbourhoodType));
-			case "2" -> algorithm = new Tabu2OptWithAspiration(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter), Integer.parseInt(neighbourhoodType));
-			case "3" -> algorithm = new Tabu2OptWithVNS(fileImporter.getGraph(), maxMillis, maxIterations, stop.equals("1"), Integer.parseInt(tenure), Integer.parseInt(maxStagnationCounter));
-			default -> {
-				System.out.println("blad");
-				return;
-			}
-		}
-
-		algorithm.setStagnationMultiplier(Double.parseDouble(factor));
 
 		System.out.println("Algorytm sie uruchamia..............");
 
@@ -216,9 +196,11 @@ public class LoadData {
 
 		double pathLength = fileImporter.getGraph().pathLength(sol);
 		System.out.println("Dlugosc sciezki: " + pathLength);
-		if (fileImporter.getGraph().getOptimalPath() != null) {
-			System.out.println("\nOptymalna sciezka : ");
-			printSolution(fileImporter.getGraph().getOptimalPath());
+		if (fileImporter.getGraph().getOptimalPathLength() != null) {
+			if (fileImporter.getGraph().getOptimalPath() != null) {
+				System.out.println("\nOptymalna sciezka: ");
+				printSolution(fileImporter.getGraph().getOptimalPath());
+			}
 			System.out.println("Dlugosc optymalnej sciezki: " + fileImporter.getGraph().getOptimalPathLength());
 			System.out.println("PRD: " + fileImporter.getGraph().PRD(sol));
 		}

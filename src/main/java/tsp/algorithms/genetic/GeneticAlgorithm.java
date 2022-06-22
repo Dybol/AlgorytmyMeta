@@ -2,19 +2,15 @@ package tsp.algorithms.genetic;
 
 import tsp.Graph;
 import tsp.algorithms.Algorithm;
-import tsp.algorithms.tabu.Tabu2Opt;
-import tsp.algorithms.tabu.Tabu2OptWithVNS;
 import tsp.util.Pair;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class GeneticAlgorithm implements Algorithm {
-	
+
 	private SingleIteration2Opt memeticAlgorithm;
 	private final Graph graph;
 	private int generationNo = 0;
@@ -24,27 +20,27 @@ public class GeneticAlgorithm implements Algorithm {
 	private long timeWhenStarted;
 	private double probabilityOfMutation;
 	private double probabilityOfCrossing;
-	
-//	1 - invert
+
+	//	1 - invert
 //	2 - swap
 //	3 - insert
 	private int typeOfNeighborhoodForMemetics;
-//	1 - invert
+	//	1 - invert
 //	2 - swap
 //	3 - insert
 	private int typeOfMutationOperator;
-//  1 - PMX
+	//  1 - PMX
 	private int typeOfCrossoverOperator;
 
 	private List<Integer> listToShuffle;
-	
+
 	private List<Integer[]> population;
 
 	private int problemSize;
 	private Integer populationSize;
 
-	public GeneticAlgorithm(Graph graph, int populationSize, double probabilityOfMutation, double probabilityOfCrossing, 
-			int typeOfNeighborhoodForMemetics, int typeOfMutationOperator, int typeOfCrossoverOperator, int maxExecutionTime, int maxGenerationNo, boolean stopOnTime) {
+	public GeneticAlgorithm(Graph graph, int populationSize, double probabilityOfMutation, double probabilityOfCrossing,
+							int typeOfNeighborhoodForMemetics, int typeOfMutationOperator, int typeOfCrossoverOperator, Integer maxExecutionTime, Integer maxGenerationNo, boolean stopOnTime) {
 		this.graph = graph;
 		this.problemSize = graph.getNodesCount();
 		this.populationSize = populationSize;
@@ -58,21 +54,20 @@ public class GeneticAlgorithm implements Algorithm {
 		this.stopOnTime = stopOnTime;
 		memeticAlgorithm = new SingleIteration2Opt(graph, this.typeOfNeighborhoodForMemetics);
 	}
-	
+
 	@Override
 	public Integer[] findSolution() {
 		timeWhenStarted = System.currentTimeMillis();
 		generationNo = 0;
 		listToShuffle = initList(problemSize);
-		population = generateStartingPopulationWithTournament((int)Math.sqrt(populationSize));
-		//population = generate();
+		population = generateStartingPopulationWithTournament((int) Math.sqrt(populationSize));
 		Integer[] bestSolution = population.get(0).clone();
 		double smallestValue = graph.pathLength(population.get(0));
 		do {
 			generationNo++;
 			List<Pair<Integer[], Integer[]>> parents = generateParentsWithRoulette();
 			List<Integer[]> children = new ArrayList<>();
-			if(typeOfCrossoverOperator == 1) {
+			if (typeOfCrossoverOperator == 1) {
 				children = crossoverPMX(parents);
 			}
 			population.addAll(children);
@@ -80,33 +75,19 @@ public class GeneticAlgorithm implements Algorithm {
 			List<Integer[]> memedPopulation = memeticAlgorithm(mutatedPopulation);
 			List<Pair<Integer[], Double>> survivorsWithValues = selectToSurviveWithValue(memedPopulation);
 			Pair<Integer[], Double> bestSolutionWithValue = getTheBestOne(survivorsWithValues);
-			if(bestSolutionWithValue.getSecond() < smallestValue) {
+			if (bestSolutionWithValue.getSecond() < smallestValue) {
 				bestSolution = bestSolutionWithValue.getFirst().clone();
 				smallestValue = graph.pathLength(bestSolution);
 				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
 				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
-				
-			}
-			
-			
-			
-//			System.out.println(generationNo);
-			
-
+      }
+      
 			population = getSurvivors(survivorsWithValues);
-			// TODO
-			// Mutacja - wykonywanie ruchów swap/insert/invert z zadanym ppb.
-			// Algorytm memetyczny - zapuszczamy np. 2Opt na każdym zmutowanym osobniku
-			// Selekcja (kto przeżywa), możliwe proste implementacje:
-			// *pojedynki w parach, przeżywa lepszy z pary
-			// *elitaryzm - sortujemy rozwiązania rosnąco w liście względem ich wartości funkcji celu, wybieramy z 5-10% najlepszych
-			// i odrzuczamy analogiczną liczbę najgorszych; reszta staje do pojedynków w parach
-			// *brutalne odcięcie najgorszej połowy
+      
 		}
-		while(!stopCriterion(System.currentTimeMillis()));
+		while (!stopCriterion(System.currentTimeMillis()));
 		return bestSolution;
 	}
-
 
 	public List<Integer[]> generate() {
 		List<Integer[]> list = new ArrayList<>();
@@ -117,13 +98,12 @@ public class GeneticAlgorithm implements Algorithm {
 
 		return list;
 	}
-	
+
 	/**
-	 * 
 	 * @param tournamentSize liczba rywali przypadająca na jedno miejsce
 	 * @return populacja początkowa
 	 */
-	public List<Integer[]> generateStartingPopulationWithTournament(int tournamentSize) { 
+	public List<Integer[]> generateStartingPopulationWithTournament(int tournamentSize) {
 		List<Pair<Integer[], Double>> largeList = new ArrayList<>();
 		List<Integer[]> list = new ArrayList<>();
 		int listSize = populationSize * tournamentSize;
@@ -132,19 +112,18 @@ public class GeneticAlgorithm implements Algorithm {
 			largeList.add(new Pair(sol, graph.pathLength(sol)));
 		}
 		for (int i = 0; i < listSize / tournamentSize; i++) {
-			List<Pair<Integer[], Double>> tournamentList = largeList.subList(i*tournamentSize, (i+1)*tournamentSize);
-			while(tournamentList.size() > 1) {
+			List<Pair<Integer[], Double>> tournamentList = largeList.subList(i * tournamentSize, (i + 1) * tournamentSize);
+			while (tournamentList.size() > 1) {
 				List<Pair<Integer[], Double>> winnersList = new ArrayList<>();
-				for(int j = 0; j + 1 < tournamentList.size(); j+=2) {
-					if(tournamentList.get(j).getSecond() <= tournamentList.get(j+1).getSecond()) {
+				for (int j = 0; j + 1 < tournamentList.size(); j += 2) {
+					if (tournamentList.get(j).getSecond() <= tournamentList.get(j + 1).getSecond()) {
 						winnersList.add(tournamentList.get(j));
-					}
-					else {
-						winnersList.add(tournamentList.get(j+1));
+					} else {
+						winnersList.add(tournamentList.get(j + 1));
 					}
 				}
-				if(tournamentList.size() % 2 == 1) {
-					winnersList.add(tournamentList.get(tournamentList.size()-1));
+				if (tournamentList.size() % 2 == 1) {
+					winnersList.add(tournamentList.get(tournamentList.size() - 1));
 				}
 				tournamentList = winnersList;
 			}
@@ -163,27 +142,26 @@ public class GeneticAlgorithm implements Algorithm {
 
 		return parents;
 	}
-	
+
 	public List<Pair<Integer[], Integer[]>> generateParentsWithRoulette() {
 		List<Pair<Integer[], Integer[]>> parents = new ArrayList<>();
 		List<Pair<Integer[], Double>> populationWithValues = evaluate(population);
 		double length = 0.0;
-		for(Pair<Integer[], Double> pair : populationWithValues) {
-			length += (1/pair.getSecond());
+		for (Pair<Integer[], Double> pair : populationWithValues) {
+			length += (1 / pair.getSecond());
 		}
-		while (parents.size() < populationSize/2) {
+		while (parents.size() < populationSize / 2) {
 			Random random = new Random();
 			double randomDouble = random.nextDouble() * length;
 			int iterOne = 0;
 			int iterTwo = 0;
-			Integer[] parentOne = populationWithValues.get(populationSize-1).getFirst();
-			Integer[] parentTwo = populationWithValues.get(populationSize-2).getFirst();
+			Integer[] parentOne = populationWithValues.get(populationSize - 1).getFirst();
+			Integer[] parentTwo = populationWithValues.get(populationSize - 2).getFirst();
 			double helpToFindSection = 0.0;
-			for(Pair<Integer[], Double> pair : populationWithValues) {
-				if (helpToFindSection + (1/pair.getSecond()) < randomDouble) {
-					helpToFindSection += (1/pair.getSecond());
-				}
-				else {
+			for (Pair<Integer[], Double> pair : populationWithValues) {
+				if (helpToFindSection + (1 / pair.getSecond()) < randomDouble) {
+					helpToFindSection += (1 / pair.getSecond());
+				} else {
 					iterOne = populationWithValues.indexOf(pair);
 					parentOne = pair.getFirst();
 					break;
@@ -191,11 +169,10 @@ public class GeneticAlgorithm implements Algorithm {
 			}
 			randomDouble = random.nextDouble() * length;
 			helpToFindSection = 0.0;
-			for(Pair<Integer[], Double> pair : populationWithValues) {
-				if (helpToFindSection + (1/pair.getSecond()) < randomDouble) {
-					helpToFindSection += (1/pair.getSecond());
-				}
-				else {
+			for (Pair<Integer[], Double> pair : populationWithValues) {
+				if (helpToFindSection + (1 / pair.getSecond()) < randomDouble) {
+					helpToFindSection += (1 / pair.getSecond());
+				} else {
 					iterTwo = populationWithValues.indexOf(pair);
 					if (iterOne == iterTwo) {
 						if (iterTwo + 1 < populationWithValues.size()) {
@@ -221,39 +198,36 @@ public class GeneticAlgorithm implements Algorithm {
 		Random random = new Random();
 		for (Pair<Integer[], Integer[]> pairOfParents : allParents) {
 			double randomDouble = random.nextDouble();
-			if(randomDouble <= probabilityOfCrossing) {
+			if (randomDouble <= probabilityOfCrossing) {
 				Integer[] firstParent = pairOfParents.getFirst();
 				Integer[] secondParent = pairOfParents.getSecond();
-	
+
 				// od 1 do problemSize -1
 				int i = random.nextInt(problemSize - 2) + 1;
 				// od 2 do problemSize -1
 				int j = random.nextInt(problemSize - 3) + 2;
-	
+
 				if (i == j) {
 					i = j - (random.nextInt(j - 1) + 1);
 				}
-	
+
 				if (i > j) {
 					int temp = i;
 					i = j;
 					j = temp;
 				}
-	
-				//System.out.println("i = " + i);
-				//System.out.println("j = " + j);
-	
+
 				Integer[] firstChild = new Integer[problemSize];
 				Integer[] secondChild = new Integer[problemSize];
-	
+
 				//kopiowanie srodkow - dziala
 				for (int x = i; x <= j; x++) {
 					firstChild[x] = secondParent[x];
 					secondChild[x] = firstParent[x];
 				}
-	
+
 				int helpIndex = i;
-	
+
 				//dodawanie poczatku i konca
 				for (int x = 0; x < problemSize; x++) {
 					if (x == i) {
@@ -271,9 +245,9 @@ public class GeneticAlgorithm implements Algorithm {
 						}
 					}
 				}
-	
+
 				helpIndex = i;
-	
+
 				for (int x = 0; x < problemSize; x++) {
 					if (x == i) {
 						x = j + 1;
@@ -292,8 +266,7 @@ public class GeneticAlgorithm implements Algorithm {
 				}
 				listOfChild.add(firstChild);
 				listOfChild.add(secondChild);
-			}
-			else {
+			} else {
 				listOfChild.add(pairOfParents.getFirst());
 				listOfChild.add(pairOfParents.getSecond());
 			}
@@ -301,15 +274,16 @@ public class GeneticAlgorithm implements Algorithm {
 
 		return listOfChild;
 	}
-	
+
 	public List<Integer[]> mutate(List<Integer[]> list) {
-		double elementaryProbability = probabilityOfMutation / ((problemSize * (problemSize-1)) / 2);
+		//rozmiar problemu
+		double elementaryProbability = probabilityOfMutation / ((problemSize * (problemSize - 1)) / 2);
 		Random random = new Random();
 		for (Integer[] solution : list) {
 			for (int i = 0; i < problemSize; i++) {
 				for (int j = i; j < problemSize; j++) {
 					if (random.nextDouble() < elementaryProbability) {
-						
+
 						//INVERT
 						if (typeOfMutationOperator == 1) {
 							solution = invert(solution, i, j);
@@ -324,13 +298,14 @@ public class GeneticAlgorithm implements Algorithm {
 						else {
 							solution = insert(solution, i, j);
 						}
+
 					}
 				}
 			}
 		}
 		return list;
 	}
-	
+
 	public List<Integer[]> memeticAlgorithm(List<Integer[]> list) {
 		List<Integer[]> improvedList = new ArrayList<>();
 		for (Integer[] solution : list) {
@@ -340,32 +315,31 @@ public class GeneticAlgorithm implements Algorithm {
 		}
 		return improvedList;
 	}
-	
+
 	public List<Pair<Integer[], Double>> selectToSurviveWithValue(List<Integer[]> list) {
 		List<Pair<Integer[], Double>> winnersWithValues = new ArrayList<>();
-		for (int i = 0 ; i + 1 < list.size(); i+=2) {
+		for (int i = 0; i + 1 < list.size(); i += 2) {
 			double valueOne = graph.pathLength(list.get(i));
-			double valueTwo = graph.pathLength(list.get(i+1));
-			if(valueOne <= valueTwo) {
+			double valueTwo = graph.pathLength(list.get(i + 1));
+			if (valueOne <= valueTwo) {
 				winnersWithValues.add(new Pair(list.get(i), valueOne));
-			}
-			else {
-				winnersWithValues.add(new Pair(list.get(i+1), valueTwo));
+			} else {
+				winnersWithValues.add(new Pair(list.get(i + 1), valueTwo));
 			}
 		}
 		return winnersWithValues;
 	}
-	
+
 	public Pair<Integer[], Double> getTheBestOne(List<Pair<Integer[], Double>> list) {
 		Pair<Integer[], Double> theBestOne = new Pair<Integer[], Double>(list.get(0).getFirst(), list.get(0).getSecond());
 		for (Pair<Integer[], Double> solutionWithValue : list) {
-			if(solutionWithValue.getSecond() < theBestOne.getSecond()) {
+			if (solutionWithValue.getSecond() < theBestOne.getSecond()) {
 				theBestOne = solutionWithValue;
 			}
 		}
 		return theBestOne;
 	}
-	
+
 	public double getAverageValue(List<Pair<Integer[], Double>> list) {
 		double avg = 0.0;
 		for (Pair<Integer[], Double> solutionWithValue : list) {
@@ -373,10 +347,10 @@ public class GeneticAlgorithm implements Algorithm {
 		}
 		return avg / list.size();
 	}
-	
+
 	public List<Integer[]> getSurvivors(List<Pair<Integer[], Double>> list) {
 		List<Integer[]> survivors = new ArrayList<>();
-		for(Pair<Integer[], Double> pair : list) {
+		for (Pair<Integer[], Double> pair : list) {
 			survivors.add(pair.getFirst());
 		}
 		return survivors;
@@ -408,31 +382,30 @@ public class GeneticAlgorithm implements Algorithm {
 
 		return tab;
 	}
-	
-	public List<Pair<Integer[], Double>> evaluate (List<Integer[]> list) {
+
+	public List<Pair<Integer[], Double>> evaluate(List<Integer[]> list) {
 		List<Pair<Integer[], Double>> listWithValues = new ArrayList<>();
 		for (Integer[] sol : list) {
 			listWithValues.add(new Pair<Integer[], Double>(sol, graph.pathLength(sol)));
 		}
 		return listWithValues;
 	}
-	
+
 	boolean stopCriterion(long currentTime) {
-		if(stopOnTime) {
-			if(currentTime - timeWhenStarted >= maxExecutionTime)
+		if (stopOnTime) {
+			if (currentTime - timeWhenStarted >= maxExecutionTime)
 				return true;
 			else
 				return false;
-		}
-		else {
-			if(generationNo >= maxGenerationNo)
+		} else {
+			if (generationNo >= maxGenerationNo)
 				return true;
 			else
 				return false;
-			
+
 		}
 	}
-	
+
 	public Integer[] insert(Integer[] tab, int from, int to) {
 		Integer[] tabPom = tab.clone();
 		Integer toInsert = tabPom[from];
@@ -463,5 +436,4 @@ public class GeneticAlgorithm implements Algorithm {
 	}
 
 
-	
 }
