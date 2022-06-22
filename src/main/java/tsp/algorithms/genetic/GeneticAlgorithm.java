@@ -52,16 +52,15 @@ public class GeneticAlgorithm implements Algorithm {
 		this.maxExecutionTime = maxExecutionTime;
 		this.maxGenerationNo = maxGenerationNo;
 		this.stopOnTime = stopOnTime;
-		timeWhenStarted = System.currentTimeMillis();
 		memeticAlgorithm = new SingleIteration2Opt(graph, this.typeOfNeighborhoodForMemetics);
 	}
 
 	@Override
 	public Integer[] findSolution() {
+		timeWhenStarted = System.currentTimeMillis();
 		generationNo = 0;
 		listToShuffle = initList(problemSize);
 		population = generateStartingPopulationWithTournament((int) Math.sqrt(populationSize));
-		//population = generate();
 		Integer[] bestSolution = population.get(0).clone();
 		double smallestValue = graph.pathLength(population.get(0));
 		do {
@@ -81,16 +80,10 @@ public class GeneticAlgorithm implements Algorithm {
 				smallestValue = graph.pathLength(bestSolution);
 				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
 				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
-			}
+      }
+      
 			population = getSurvivors(survivorsWithValues);
-			// TODO
-			// Mutacja - wykonywanie ruchów swap/insert/invert z zadanym ppb.
-			// Algorytm memetyczny - zapuszczamy np. 2Opt na każdym zmutowanym osobniku
-			// Selekcja (kto przeżywa), możliwe proste implementacje:
-			// *pojedynki w parach, przeżywa lepszy z pary
-			// *elitaryzm - sortujemy rozwiązania rosnąco w liście względem ich wartości funkcji celu, wybieramy z 5-10% najlepszych
-			// i odrzuczamy analogiczną liczbę najgorszych; reszta staje do pojedynków w parach
-			// *brutalne odcięcie najgorszej połowy
+      
 		}
 		while (!stopCriterion(System.currentTimeMillis()));
 		return bestSolution;
@@ -223,9 +216,6 @@ public class GeneticAlgorithm implements Algorithm {
 					i = j;
 					j = temp;
 				}
-
-				//System.out.println("i = " + i);
-				//System.out.println("j = " + j);
 
 				Integer[] firstChild = new Integer[problemSize];
 				Integer[] secondChild = new Integer[problemSize];
