@@ -15,43 +15,7 @@ import java.util.Scanner;
 public class LoadData {
 	public static void main(String[] args) throws FileNotFoundException {
 		chooseOption();
-//		new ProbabilityOfMutationTest().test();
-//		new ProbabilityOfCrossoverTest().test();
-//		new ManualTest().test();
-//		testGenetic();
-
 	}
-
-
-//	public static void testCrossover() {
-//		GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm(100);
-//		List<Pair<Integer[], Integer[]>> parents = geneticAlgorithm.generateParents();
-//		for (Pair<Integer[], Integer[]> p : parents) {
-//			printSolution(p.getFirst());
-//			printSolution(p.getSecond());
-//			System.out.println("---------");
-//		}
-//		List<Integer[]> crossover = geneticAlgorithm.crossover(parents);
-//		for (Integer[] c : crossover) {
-//			int sum = 0;
-//			printSolution(c);
-//			for (int x : c) {
-//				sum += x;
-//			}
-//			System.out.println(sum);
-//		}
-//	}
-
-	public static void testGenetic() throws FileNotFoundException {
-		FileImporter lowerDiagImporter = new Euc2dImporter();
-		lowerDiagImporter.importGraph("instances/eil101.tsp");
-//		lowerDiagImporter.importOptimalTour("instances/gr120.opt.tour");
-		Graph graph1 = lowerDiagImporter.getGraph();
-		graph1.setOptimalPathLength(629.0);
-		GeneticAlgorithm alg = new GeneticAlgorithm(graph1, 50, 0.20, 1.0, 1, 2, 1, 1000 * 300, 100, true);
-		alg.findSolution();
-	}
-
 
 	private static void chooseOption() throws FileNotFoundException {
 		Scanner scanner = new Scanner(System.in);
