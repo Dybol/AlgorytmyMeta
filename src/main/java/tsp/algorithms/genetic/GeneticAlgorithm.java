@@ -56,17 +56,17 @@ public class GeneticAlgorithm implements Algorithm {
 		this.maxExecutionTime = maxExecutionTime;
 		this.maxGenerationNo = maxGenerationNo;
 		this.stopOnTime = stopOnTime;
-		timeWhenStarted = System.currentTimeMillis();
 		memeticAlgorithm = new SingleIteration2Opt(graph, this.typeOfNeighborhoodForMemetics);
 	}
 	
 	@Override
 	public Integer[] findSolution() {
+		timeWhenStarted = System.currentTimeMillis();
 		generationNo = 0;
 		listToShuffle = initList(problemSize);
 		population = generateStartingPopulationWithTournament((int)Math.sqrt(populationSize));
 		//population = generate();
-		Integer[] bestSolution = population.get(0);
+		Integer[] bestSolution = population.get(0).clone();
 		double smallestValue = graph.pathLength(population.get(0));
 		do {
 			generationNo++;
@@ -83,10 +83,11 @@ public class GeneticAlgorithm implements Algorithm {
 			if(bestSolutionWithValue.getSecond() < smallestValue) {
 				bestSolution = bestSolutionWithValue.getFirst().clone();
 				smallestValue = graph.pathLength(bestSolution);
+				double averageValueOfPopulation = getAverageValue(survivorsWithValues);
+				System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
 				
 			}
-			double averageValueOfPopulation = getAverageValue(survivorsWithValues);
-			System.out.println(generationNo + "\t" + smallestValue + " (min)\t" + graph.PRD(bestSolution) + "% (PRD)\t" + averageValueOfPopulation + " (avg)\t");
+			
 			
 			
 //			System.out.println(generationNo);
